@@ -5,7 +5,9 @@ build-backend = "hatchling.build"
 [project]
 name = "custom_numbers"
 version = "0.0.1"
-authors = [{ name = "Evgueni Antonov", email = "Evgueni.Antonov@gmail.com" }]
+authors = [
+    { name = "Evgueni Antonov", email = "Evgueni.Antonov@gmail.com" },
+]
 description = "Swiss-army knife for numbers of custom numeral systems."
 readme = "README.md"
 requires-python = ">=3.7"
@@ -16,9 +18,10 @@ classifiers = [
     "Operating System :: OS Independent",
     "Topic :: Scientific/Engineering :: Mathematics",
 ]
-license = { file= "LICENSE" }
+license = { file = "LICENSE" }
 keywords = ["number", "numbers", "numeral", "counter", "mathematics", "math"]
 
 [project.urls]
 "Homepage" = "https://github.com/pypa/sampleproject"
 "Bug Tracker" = "https://github.com/pypa/sampleproject/issues"
+
