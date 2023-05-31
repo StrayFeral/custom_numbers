@@ -1,25 +1,21 @@
 import pytest
 import pickle
-
 import sys
-import os
-current = os.path.dirname(os.path.realpath(__file__))
-parent = os.path.dirname(current)
-sys.path.append(parent)
 
-from permutator import GearIterator # type: ignore
+from custom_numbers import custom_numbers as cn
 
 
 
 # Scenario 0) Invalid parameters exception test
-params0_1 = [[], 0, 2]                      # Empty set
-params0_2 = [["p","b","a"], 3, 2]           # min_length > max_length
-params0_3 = [["p","b","a"], 5, 10, "ppp"]   # len(init_value) < min_length
-params0_4 = [["p","b","a"], 5, 10, "ppppppppppppppp"] # len(init_value) > max_length
-params0_5 = [["p","b","a"], 3, 10, "pbz"]   # Invalid symbol in init_value
+sys3 = cn.CustomNumeralSystem("pba")
+#params0_1 = [[], 0, 2]                      # Empty set
+params0_2 = [sys3, 3, 2]           # min_length > max_length
+params0_3 = [sys3, 5, 10, "ppp"]   # len(init_value) < min_length
+params0_4 = [sys3, 5, 10, "ppppppppppppppp"] # len(init_value) > max_length
+params0_5 = [sys3, 3, 10, "pbz"]   # Invalid symbol in init_value
 
 # Scenario 1) no init_value, max_length=2, full test
-params1 = [["p","b","a"], 0, 2, ""]
+params1 = [sys3, 0, 2, ""]
 expected1 = [
     ("p"),
     ("b"),
@@ -36,7 +32,7 @@ expected1 = [
 ]
 
 # Scenario 2) init_value="pa", min_value=2, max_length=3, partial test
-params2 = [["p","b","a"], 2, 3, "ap"]
+params2 = [sys3, 2, 3, "ap"]
 expected2 = [
     ("ap"),
     ("ab"),
@@ -48,41 +44,38 @@ expected2 = [
 
 
 class TestGearIterator():
-    r"""GearIterator test class
-    2023 Evgueni.Antonov@gmail.com
-    
-    pytest test_permutator.py
-    """
+    r"""GearIterator test class."""
     
     @classmethod
     def setup_class(cls):
-        cls.scenario1 = GearIterator(*params1)
-        cls.scenario2 = GearIterator(*params2)
+        cls.scenario1 = cn.GearIterator(*params1)
+        cls.scenario2 = cn.GearIterator(*params2)
     
     
-    def test_scenario0_1(self):
-        with pytest.raises(Exception):
-            i = GearIterator(*params0_1)
+    # Test no longer needed
+    #def test_scenario0_1(self):
+    #    with pytest.raises(Exception):
+    #        i = cn.GearIterator(*params0_1)
     
     
     def test_scenario0_2(self):
         with pytest.raises(Exception):
-            i = GearIterator(*params0_2)
+            i = cn.GearIterator(*params0_2)
     
     
     def test_scenario0_3(self):
         with pytest.raises(Exception):
-            i = GearIterator(*params0_3)
+            i = cn.GearIterator(*params0_3)
     
     
     def test_scenario0_4(self):
         with pytest.raises(Exception):
-            i = GearIterator(*params0_4)
+            i = cn.GearIterator(*params0_4)
     
     
     def test_scenario0_5(self):
         with pytest.raises(Exception):
-            i = GearIterator(*params0_5)
+            i = cn.GearIterator(*params0_5)
     
     
     @pytest.mark.parametrize("expected", expected1)

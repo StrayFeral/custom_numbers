@@ -33,7 +33,7 @@ r"""
 from custom_numbers import custom_numbers as cn
 sys3 = cn.CustomNumeralSystem("paf")
 num1 = cn.CustomNumber(sys3, "a")
-num1.to_decimal_int()
+num1.to_decimal()
 """
 
 
@@ -107,26 +107,38 @@ class CustomNumeralSystem:
         return self._base
     
     
-    def validate_number(self, number: str) -> None:
+    def valid_number(self, number: str) -> bool:
         r"""Validation: Is this digit belonging to this numeral system?"""
         
-        regex_str = f"[^{self._digits}]"
+        if len(number) == 0:
+            raise ValueError("Passed an empty string as a 'number' argument.")
+        
+        # Test if string contains forbidden characters
+        regex_str = f"\[{self._FORBIDDENCHARACTERS}\]"
         regex = re.compile(regex_str)
         if regex.search(number):
-            raise ValueError("Invalid characters in number, which are not in the chosen numeral system.")
+            return False
+        
+        # Test if string contains any characters outside the defined set
+        regex_str = f"\[^{self._digits}\]"
+        regex = re.compile(regex_str)
+        if regex.search(number):
+            return False
+        
+        return True
     
     
 
 class CustomNumber:
     r"""Definition of a number from the CustomNumericalSystem."""
     
-    def __init__(self, numeral_system: CustomNumeralSystem, init_value: str = "", init_value_int: int = 0) -> None:
+    def __init__(self, numeral_system: CustomNumeralSystem, value: str = "") -> None:
         self._numeral_system: CustomNumeralSystem = numeral_system
-        self._init_value: str = init_value # Just in case we will keep the original value
+        self._init_value: str = value # Just in case we will keep the original value
         self._value: str = self._init_value
         
-        # Validation: Is this digit belonging to this numeral system?
-        numeral_system.validate_number(init_value)
+        if not numeral_system.valid_number(value):
+            raise ValueError("Invalid characters in number, which are not in the chosen numeral system.")
     
     
     def __repr__(self) -> str:
@@ -139,21 +151,24 @@ class CustomNumber:
     
     
     def digit_to_int(self, digit: str) -> int:
+        r"""Fastest and simplest possible conversion. Left-most one is the zero."""
+        
         if len(digit) != 1:
             raise ValueError("Invalid digit. Contains more than one character.")
         return str(self._numeral_system).index(digit)
     
     
-    def to_decimal_int(self) -> int:
-        if len(self._value) == 1:
-            return self.digit_to_int(self._value)
+    def to_decimal(self) -> int:
+        r"""Converts a number of a custom numeral system to a decimal integer."""
         
         power = 0
         int_value = 0
+        
         for digit in self._value[::-1]:
-            int_value += self.digit_to_int(digit) * self._numeral_system.base ** power
+            int_value += self.digit_to_int(digit) * (self._numeral_system.base ** power)
             power += 1
-    
+        
+        return int_value
     
     
     # input: set of symbols
@@ -170,142 +185,130 @@ class CustomNumber:
 
 
 
-# ~ class GearIterator:
-    # ~ r"""GearIterator.
+class GearIterator:
+    r"""GearIterator.
     
-    # ~ Briefly simulates old gear permutators, like the old cars odometer.
+    Briefly simulates old gear permutators, like the old cars odometer.
     
-    # ~ The class is serializable, works with both pickle and dill.
-    # ~ The class implements the context management protocol.
-    # ~ The class is thread safe.
+    The class is serializable, works with both pickle and dill.
+    The class implements the context management protocol.
+    The class is thread safe.
     
-    # ~ Args:
-        # ~ symbol_list: List of symbols. Mind the order of symbols!
-        # ~ min_length: Minimum length, default is zero
-        # ~ max_length: Maximum length, default is zero - means no limit
-        # ~ init_value: Value to initialize with
+    Args:
+        symbol_list: List of symbols. Mind the order of symbols!
+        min_length: Minimum length, default is zero
+        max_length: Maximum length, default is zero - means no limit
+        init_value: Value to initialize with
     
-    # ~ Returns:
-        # ~ str
-    # ~ """
+    Returns:
+        str
+    """
     
-    # ~ def __init__(self, symbols: str, min_length: int = 0, max_length: int = 0, init_value: str = "") -> None:
-        # ~ numeral_system: object = CustomNumeralSystem(symbols)
-        # ~ self._symbol_list: List[str] = numeral_system.symbol_list
-        # ~ self._init_value: str = init_value
+    def __init__(self, numeral_system: CustomNumeralSystem, min_length: int = 0, max_length: int = 0, init_value: str = "") -> None:
+        self._numeral_system: CustomNumeralSystem = numeral_system
+        self._symbol_list: List[str] = [x for x in str(numeral_system)]
+        self._min_length = min_length
+        self._max_length = max_length
+        self._init_value: str = init_value
+        self._init_value_returned: bool = False
+        self._index: int = 0
         
+        # Basic validation ...
+        if max_length > 0 and min_length > max_length:
+            raise ValueError("min_length is greather than max_length.")
         
+        if len(init_value) > 0 and (len(init_value) < min_length or (max_length > 0 and len(init_value) > max_length)):
+            raise ValueError("Incorrect init_value length.")
         
+        if not numeral_system.valid_number(init_value):
+            raise ValueError("Invalid characters in number, which are not in the chosen numeral system.")
+
         
+        self._init_value = init_value[::-1] # Reverse the string
         
-        # ~ if len(symbol_list) == 0:
-            # ~ raise ValueError("Empty symbol_list given.")
+        min_len = min_length
+        if min_len == 0:
+            min_len = 1
         
-        # ~ if len(symbol_list) != len(set(symbol_list)):
-            # ~ raise ValueError("Duplicate symbols in the symbol_list.")
+        self._gears: List[list] = []
         
-        # ~ if max_length > 0 and min_length > max_length:
-            # ~ raise ValueError("min_length is greather than max_length.")
-        
-        # ~ if len(init_value) > 0 and (len(init_value) < min_length or (max_length > 0 and len(init_value) > max_length)):
-            # ~ raise ValueError("Incorrect init_value length.")
-        
-        # ~ regex_str = re.sub(r"[\s,']", "", str(symbol_list))
-        # ~ regex_str = re.sub(r"\[", "[^", regex_str)
-        # ~ regex = re.compile(regex_str)
-        # ~ if regex.search(init_value):
-            # ~ raise ValueError("Incorrect symbols in init_value, which are not in the symbols_list.")
-        
-        # ~ self._init_value_returned: bool = False
-        # ~ self._index: int = 0
-        # ~ self._symbol_list: List[str] = symbol_list.copy()
-        # ~ self._min_length = min_length
-        # ~ self._max_length = max_length
-        # ~ self._init_value = init_value[::-1] # Reverse the string
-        
-        # ~ min_len = min_length
-        # ~ if min_len == 0:
-            # ~ min_len = 1
-        
-        # ~ self._gears: List[list] = []
-        
-        # ~ # Initialization with init_value
-        # ~ for symbol in self._init_value:
-            # ~ seq = self._symbol_list.copy()
+        # Initialization with init_value
+        for symbol in self._init_value:
+            seq = self._symbol_list.copy()
             
-            # ~ while seq[0] != symbol:
-                # ~ seq.pop(0)
+            while seq[0] != symbol:
+                seq.pop(0)
             
-            # ~ self._gears.append(seq)
+            self._gears.append(seq)
         
-        # ~ # Additional initialization until min_length is reached
-        # ~ for i in range(len(self._gears), min_len):
-            # ~ seq = self._symbol_list.copy()
+        # Additional initialization until min_length is reached
+        for i in range(len(self._gears), min_len):
+            seq = self._symbol_list.copy()
             
-            # ~ if len(self._init_value) > 0 and i < len(self._init_value):
-                # ~ symbol = self._init_value[i]
-                # ~ while seq[0] != symbol:
-                    # ~ seq.pop(0)
+            if len(self._init_value) > 0 and i < len(self._init_value):
+                symbol = self._init_value[i]
+                while seq[0] != symbol:
+                    seq.pop(0)
             
-            # ~ self._gears.append(seq)
-        
-    
-    # ~ def __repr__(self) -> str:
-        # ~ result = ""
-        # ~ for gear in self._gears:
-            # ~ result += gear[0]
-        # ~ return result[::-1] # Reverse the string
-    
-    
-    # ~ def __iter__(self) -> object:
-        # ~ return self
+            self._gears.append(seq)
         
     
-    # ~ # l = list(generator) # internally call next() until exhaustion
-    # ~ def __next__(self) -> str:
-        # ~ # Critical section
-        # ~ with threading.Lock():
-            # ~ if not self._init_value_returned:
-                # ~ self._init_value_returned = True
-                # ~ return repr(self)
+    def __repr__(self) -> str:
+        result = ""
+        for gear in self._gears:
+            result += gear[0]
+        return result[::-1] # Reverse the string
+    
+    
+    def __iter__(self) -> object:
+        return self
+        
+    
+    # l = list(generator) # internally call next() until exhaustion
+    def __next__(self) -> str:
+        if not self._init_value_returned:
+            self._init_value_returned = True
+            return repr(self)
+        
+        spin_wheels = True
+        i = 0
+        while spin_wheels:
+            self._gears[i].pop(0)
             
-            # ~ spin_wheels = True
-            # ~ i = 0
-            # ~ while spin_wheels:
-                # ~ self._gears[i].pop(0)
+            # Reset gear
+            if len(self._gears[i]) == 0:
+                self._gears[i] = self._symbol_list.copy()
+                i += 1
                 
-                # ~ # Reset gear
-                # ~ if len(self._gears[i]) == 0:
-                    # ~ self._gears[i] = self._symbol_list.copy()
-                    # ~ i += 1
-                    
-                    # ~ # Add a new gear
-                    # ~ if i == len(self._gears) and i < self._max_length:
-                        # ~ self._gears.append(self._symbol_list.copy())
-                        # ~ spin_wheels = False
-                    
-                    # ~ if i == self._max_length:
-                        # ~ raise StopIteration
-                # ~ else: # Wheel not yet reached the final set value
-                    # ~ spin_wheels = False
-            
-            # ~ return repr(self)
-    
-    
-    # ~ def __enter__(self) -> object:
-        # ~ r"""Context management protocol.
+                # Add a new gear
+                if i == len(self._gears) and i < self._max_length:
+                    self._gears.append(self._symbol_list.copy())
+                    spin_wheels = False
+                
+                if i == self._max_length:
+                    raise StopIteration
+            else: # Wheel not yet reached the final set value
+                spin_wheels = False
         
-        # ~ Not sure we will need this, but it's there"""
-        # ~ return self
+        return repr(self)
     
     
-    # ~ def __exit__(self, exc_type, exc_value, exc_tb) -> bool:
-        # ~ r"""Context management protocol.
+    def __enter__(self) -> object:
+        r"""Context management protocol.
         
-        # ~ StopIteration exception will not be propagated.
+        Not sure we would need this, but it's there.
+        """
+        return self
+    
+    
+    def __exit__(self, exc_type, exc_value, exc_tb) -> bool:
+        r"""Context management protocol.
         
-        # ~ Not sure we will need this, but it's there"""
-        # ~ return True # We won't propagate the StopIteration exception
+        StopIteration exception will not be propagated.
+        
+        Not sure we would need this, but it's there.
+        """
+        return True # We won't propagate the StopIteration exception
 
 
 
