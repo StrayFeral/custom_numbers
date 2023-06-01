@@ -61,8 +61,8 @@ Now - a hexadecimal number - these are made of the digits
 
 So a hexadecimal number looks like this:
 
-> F<sub>16</sub> == 15<sub>10</sub>
-> 10<sub>16</sub> == 16<sub>10</sub>
+> F<sub>16</sub> == 15<sub>10</sub>, 
+> 10<sub>16</sub> == 16<sub>10</sub>, 
 > F0<sub>16</sub> == 240<sub>10</sub>
 
 The other well-known numeral system is the octal system, consisting of
@@ -87,8 +87,8 @@ But now how about something crazier - a numeral system with a Base of 3,
 using the symbols **P, A, F** as digits, so **F** would be **2** decimal,
 **P** would be **0** decimal. Therefore:
 
-> AA<sub>3</sub> == 4<sub>10</sub>
-> AF<sub>3</sub> == 5<sub>10</sub>
+> AA<sub>3</sub> == 4<sub>10</sub>, 
+> AF<sub>3</sub> == 5<sub>10</sub>, 
 > FP<sub>3</sub> == 6<sub>10</sub>
 
 Now let's see this in action:
