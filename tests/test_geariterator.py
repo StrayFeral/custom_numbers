@@ -6,9 +6,12 @@ from custom_numbers import custom_numbers as cn
 
 
 # ================================================== GEARITERATOR TESTS
-# Scenario 0) Invalid parameters exception test
+
+# Common parameter
 sys3 = cn.CustomNumeralSystem("pba")
-#params0_1 = [[], 0, 2]                      # Empty set
+
+# Scenario 0) Invalid parameters exception test
+#params0_1 = [cn.CustomNumeralSystem(""), 0, 2]              # Empty set
 params0_2 = [sys3, 3, 2]            # min_length > max_length
 params0_3 = [sys3, 5, 10, "ppp"]    # len(init_value) < min_length
 params0_4 = [sys3, 5, 10, "ppppppppppppppp"] # len(init_value) > max_length
@@ -52,7 +55,7 @@ class TestGearIterator():
         cls.scenario2 = cn.GearIterator(*params2)
     
     
-    # Test no longer needed
+    ## Test no longer needed
     #def test_scenario0_1(self):
     #    with pytest.raises(Exception):
     #        i = cn.GearIterator(*params0_1)
@@ -98,6 +101,7 @@ class TestGearIterator():
     
     def test_scenario3(self):
         """Testing serialization"""
+        
         our_iterator = self.scenario2
         assert next(our_iterator) == "ppa"
         serialized = pickle.dumps(our_iterator)

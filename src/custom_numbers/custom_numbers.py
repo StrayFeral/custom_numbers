@@ -148,7 +148,7 @@ class CustomNumber:
         r"""Fastest and simplest possible conversion. Left-most one is the zero."""
         
         if len(digit) != 1:
-            raise ValueError("Invalid digit. Contains more than one character.")
+            raise ValueError("Invalid digit. Must be one character.")
         return str(self._numeral_system).index(digit)
     
     
