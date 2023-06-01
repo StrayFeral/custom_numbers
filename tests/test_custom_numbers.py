@@ -5,14 +5,14 @@ import sys
 from custom_numbers import custom_numbers as cn
 
 
-
+# ================================================== GEARITERATOR TESTS
 # Scenario 0) Invalid parameters exception test
 sys3 = cn.CustomNumeralSystem("pba")
 #params0_1 = [[], 0, 2]                      # Empty set
-params0_2 = [sys3, 3, 2]           # min_length > max_length
-params0_3 = [sys3, 5, 10, "ppp"]   # len(init_value) < min_length
+params0_2 = [sys3, 3, 2]            # min_length > max_length
+params0_3 = [sys3, 5, 10, "ppp"]    # len(init_value) < min_length
 params0_4 = [sys3, 5, 10, "ppppppppppppppp"] # len(init_value) > max_length
-params0_5 = [sys3, 3, 10, "pbz"]   # Invalid symbol in init_value
+params0_5 = [sys3, 3, 10, "pbz"]    # Invalid symbol in init_value
 
 # Scenario 1) no init_value, max_length=2, full test
 params1 = [sys3, 0, 2, ""]

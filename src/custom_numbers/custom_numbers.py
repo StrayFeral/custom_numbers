@@ -105,14 +105,16 @@ class CustomNumeralSystem:
         if len(number) == 0:
             raise ValueError("Passed an empty string as a 'number' argument.")
         
-        # Test if string contains forbidden characters
-        regex_str = f"\[{self._FORBIDDENCHARACTERS}\]"
+        # Test if string contains forbidden characters.
+        # Generally I dislike the + string concatenation, but as an
+        # f-string the regexes triggered some warnings.
+        regex_str = r"[" + re.escape(self._FORBIDDENCHARACTERS) + r"]"
         regex = re.compile(regex_str)
         if regex.search(number):
             return False
         
         # Test if string contains any characters outside the defined set
-        regex_str = f"\[^{self._digits}\]"
+        regex_str = r"[^" + re.escape(self._digits) + r"]"
         regex = re.compile(regex_str)
         if regex.search(number):
             return False
@@ -208,7 +210,7 @@ class GearIterator:
         if len(init_value) > 0 and (len(init_value) < min_length or (max_length > 0 and len(init_value) > max_length)):
             raise ValueError("Incorrect init_value length.")
         
-        if not numeral_system.valid_number(init_value):
+        if len(init_value) > 0 and not numeral_system.valid_number(init_value):
             raise ValueError("Invalid characters in number, which are not in the chosen numeral system.")
 
         
