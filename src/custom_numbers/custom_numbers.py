@@ -1,20 +1,11 @@
-r"""NAME
-    custom_numbers
+r"""Swiss-army knife for custom numeral systems.
 
-MODULE REFERENCE
-    N/A
+Copyright (c) 2023 Evgueni Antonov. All rights reserved.
+This work is licensed under the terms of the MIT license.
+See LICENSE file.
 
-DESCRIPTION
-    Swiss-army knife for custom numeral systems.
-    
-    Copyright (c) 2023 Evgueni Antonov. All rights reserved.
-    This work is licensed under the terms of the MIT license.
-    See LICENSE file.
-
-CLASSES
-    CustomNumeralSystem
-    CustomNumber
-    GearIterator
+Project homepage and documentation:
+https://github.com/StrayFeral/custom_numbers
 """
 
 import re

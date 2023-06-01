@@ -22,6 +22,6 @@ license = { file = "LICENSE" }
 keywords = ["number", "numbers", "numeral", "counter", "mathematics", "math"]
 
 [project.urls]
-"Homepage" = "https://github.com/pypa/sampleproject"
-"Bug Tracker" = "https://github.com/pypa/sampleproject/issues"
+"Homepage" = "https://github.com/StrayFeral/custom_numbers"
+"Bug Tracker" = "https://github.com/StrayFeral/custom_numbers/issues"
 
