@@ -73,7 +73,7 @@ Base of 10 and is made of the digits from zero to nine.
 
 ### TUTORIAL: DECLARING A CUSTOM NUMERAL SYSTEM
 
-Okay, so far you are familiar with the most widely used numeral system -
+Okay, so far you are familiar with the most widely used numeral systems -
 the binary, the octal, the decimal and the hexadecimal.
 
 Let's start by re-defining the binary system. So it does have a Base of 2
