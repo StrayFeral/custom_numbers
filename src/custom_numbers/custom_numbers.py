@@ -27,14 +27,6 @@ import asyncio
 __version__ = "0.0.1"
 __author__ = r"Evgueni Antonov (Evgueni.Antonov@gmail.com)"
 
-# https://www.reddit.com/r/learnmath/comments/13v410v/what_common_known_symbols_a_numeral_system_with/
-
-r"""
-from custom_numbers import custom_numbers as cn
-sys3 = cn.CustomNumeralSystem("paf")
-num1 = cn.CustomNumber(sys3, "a")
-num1.to_decimal()
-"""
 
 
 class CustomNumeralSystem:
@@ -132,7 +124,7 @@ class CustomNumeralSystem:
 class CustomNumber:
     r"""Definition of a number from the CustomNumericalSystem."""
     
-    def __init__(self, numeral_system: CustomNumeralSystem, value: str = "") -> None:
+    def __init__(self, numeral_system: CustomNumeralSystem, value: str) -> None:
         self._numeral_system: CustomNumeralSystem = numeral_system
         self._init_value: str = value # Just in case we will keep the original value
         self._value: str = self._init_value
@@ -171,8 +163,7 @@ class CustomNumber:
         return int_value
     
     
-    # input: set of symbols
-    # we need to implement:
+    # TODO:
     # comparison operators < > != == >= etc
     # addition
     # subtraction
@@ -183,19 +174,16 @@ class CustomNumber:
 
 
 
-
-
 class GearIterator:
     r"""GearIterator.
     
-    Briefly simulates old gear permutators, like the old cars odometer.
+    Briefly simulates old gear counters, like the old cars odometer.
     
     The class is serializable, works with both pickle and dill.
     The class implements the context management protocol.
-    The class is thread safe.
     
     Args:
-        symbol_list: List of symbols. Mind the order of symbols!
+        numeral_system: Custom numeral system. Mind the order of symbols!
         min_length: Minimum length, default is zero
         max_length: Maximum length, default is zero - means no limit
         init_value: Value to initialize with
