@@ -11,10 +11,6 @@ https://github.com/StrayFeral/custom_numbers
 import re
 import math
 from typing import List, Generator
-#import threading
-#import asyncio
-#import multiprocessing as mp
-#from ctypes import c_wtypes_p
 
 __version__ = "0.0.1"
 __author__ = r"Evgueni Antonov (Evgueni.Antonov@gmail.com)"
@@ -31,8 +27,15 @@ class CustomNumeralSystem:
                 Obviously each "digit" would consist of a single-
                 character.
                 
-                Forbidden characters: -, +, *, / and space
+                Forbidden characters: -, +, *, /, % and space
     
+    For the needs of basic validation, the equality and iequality Python
+    operators were implemented, so you could compare two objects.
+    
+    However the comparisson would be by the list (basically the string)
+    of the characters representing the digits, rather than standard
+    Python object (reference) comparisson.
+                
     Example:
         sys1 = CustomNumeralSystem("012ab") # Custom Base5 numeral system
         sys2 = CustomNumeralSystem("mab87")
@@ -49,10 +52,26 @@ class CustomNumeralSystem:
         # "ap"
         # "aa"
         # and so on. You get the idea.
+        
+        # COMPARISSON
+        sys1 = cn.CustomNumeralSystem("paf")
+        sys2 = cn.CustomNumeralSystem("paf")
+        
+        # The two objects are different, despite being initialized with
+        # the same value
+        id(sys1) == id(sys2) # False
+        
+        # However the set of characters (the digits) is the same, the 
+        # base is the same, so I accept they are the same numeral systems
+        sys1 == sys2 # True
+        
+        # And you could also test for inequality
+        sys1 = cn.CustomNumeralSystem("paf")
+        sys2 = cn.CustomNumeralSystem("paz")
+        sys1 != sys2 # True
     """
     
-    _SIGNSUPPORT: bool = False # Only unsigned integers at the moment
-    _FORBIDDENCHARACTERS: str = r"+-*/\s"
+    _FORBIDDENCHARACTERS: str = r"+-*/%\s"
     
     
     def __init__(self, digits: str) -> None:
@@ -66,7 +85,7 @@ class CustomNumeralSystem:
         if len(digits) != len(digit_set):
             raise ValueError("Duplicate characters in the 'digits' argument.")
         
-        # I don't need we need to put a limit here. Let the user decide.
+        # I don't think we need to put a limit here. Let the user decide.
         #if self._base > self._MAXBASE:
         #    raise ValueError(f"Unsupported numeral base given {self._base}. Maximum base supported is {self._MAXBASE}.")
         
@@ -83,12 +102,6 @@ class CustomNumeralSystem:
     def __ne__(self, other) -> bool:
         """This compare both the digits and the Base."""
         return self._digits != str(other)
-    
-    
-    @property
-    def sign_support(self) -> bool:
-        r"""Shows the current state of the sign support - does it support signed numbers?"""
-        return self._SIGNSUPPORT
     
     
     @property
@@ -109,7 +122,8 @@ class CustomNumeralSystem:
         
         # Test if string contains forbidden characters.
         # Generally I dislike the + string concatenation, but as an
-        # f-string the regexes triggered some warnings.
+        # f-string the regexes triggered some warnings, despite I
+        # escaped them.
         regex_str = r"[" + re.escape(self._FORBIDDENCHARACTERS) + r"]"
         regex = re.compile(regex_str)
         if regex.search(number):
@@ -126,18 +140,40 @@ class CustomNumeralSystem:
     
 
 class CustomNumber:
-    r"""Definition of a number from the CustomNumericalSystem."""
+    r"""Definition of a number from the CustomNumericalSystem.
     
-    def __init__(self, numeral_system: CustomNumeralSystem, value: str) -> None:
-        self._numeral_system: CustomNumeralSystem = numeral_system
-        self._init_value: str = value # Just in case we will keep the original value
-        self._value: str = self._init_value
+    Args:
+        numeral_system: The custom numeral system the number is going to be from.
+        number: The number as a string. Signed numbers are supported.
         
-        if not numeral_system.valid_number(value):
-            raise ValueError("Invalid characters in number, which are not in the chosen numeral system.")
+    Basic math operations are supported trough standard Python operators.
     
+    Comparisson operators are supported as well.
+    
+    Example:
+        sysN = cn.CustomNumeralSystem("paf")
+        numN1 = cn.CustomNumber(sysN, "-a") # A negative number
+        numN2 = cn.CustomNumber(sysN, "a")  # A positive number
+        numN3 = cn.CustomNumber(sysN, "+a") # A positive number
+    """
+    
+    _POSITIVE: str = r"+"
+    _NEGATIVE: str = r"-"
+    
+    def __init__(self, numeral_system: CustomNumeralSystem, number: str) -> None:
+        self._numeral_system: CustomNumeralSystem = numeral_system
+        self._init_value: str = number # Just in case we will keep the original value
+        self._value: str = number
+        
+        self.absolute() # This will set the sign as well
+        
+        if not numeral_system.valid_number(self._value):
+            raise ValueError("Invalid characters in number, which are not in the chosen numeral system.")
+        
     
     def __repr__(self) -> str:
+        if self._sign == self._NEGATIVE:
+            return f"-{self._value}"
         return self._value
     
     
@@ -190,7 +226,50 @@ class CustomNumber:
         if self.numeral_system != other.numeral_system:
             raise ValueError("Numbers must be from the same numeral system.")
         result = self.to_decimal() - other.to_decimal()
-        print(f"-----------: {result}, {self.numeral_system}")
+        num = CustomNumber(self.numeral_system, str(self.numeral_system)[0]) # Dummy init_value
+        num.from_decimal(result)
+        return num
+    
+    
+    def __mul__(self, other) -> object:
+        if self.numeral_system != other.numeral_system:
+            raise ValueError("Numbers must be from the same numeral system.")
+        result = self.to_decimal() * other.to_decimal()
+        num = CustomNumber(self.numeral_system, str(self.numeral_system)[0]) # Dummy init_value
+        num.from_decimal(result)
+        return num
+    
+    
+    def __floordiv__(self, other) -> object:
+        if self.numeral_system != other.numeral_system:
+            raise ValueError("Numbers must be from the same numeral system.")
+        result = self.to_decimal() // other.to_decimal()
+        num = CustomNumber(self.numeral_system, str(self.numeral_system)[0]) # Dummy init_value
+        num.from_decimal(result)
+        return num
+    
+    
+    def __truediv__(self, other) -> object:
+        return self.__floordiv__(other)
+    
+    
+    def __div__(self, other) -> object:
+        return self.__floordiv__(other)
+    
+    
+    def __pow__(self, other) -> object:
+        if self.numeral_system != other.numeral_system:
+            raise ValueError("Numbers must be from the same numeral system.")
+        result = self.to_decimal() ** other.to_decimal()
+        num = CustomNumber(self.numeral_system, str(self.numeral_system)[0]) # Dummy init_value
+        num.from_decimal(result)
+        return num
+    
+    
+    def __mod__(self, other) -> object:
+        if self.numeral_system != other.numeral_system:
+            raise ValueError("Numbers must be from the same numeral system.")
+        result = self.to_decimal() % other.to_decimal()
         num = CustomNumber(self.numeral_system, str(self.numeral_system)[0]) # Dummy init_value
         num.from_decimal(result)
         return num
@@ -203,7 +282,29 @@ class CustomNumber:
     
     @property
     def init_value(self) -> str:
+        r"""Return the value the class was initialized with, as it was originally passed to the class."""
         return self._init_value
+    
+    
+    def absolute(self, number: str = "") -> str:
+        """Returns the absolute value."""
+        
+        num = number
+        if len(number) == 0:
+            num = self._value
+        
+        sign = self._POSITIVE
+        if num[0] == self._NEGATIVE:
+            sign = self._NEGATIVE
+        
+        if num[0] == self._POSITIVE or num[0] == self._NEGATIVE:
+            num = num[1:] # Strip sign
+        
+        if len(number) == 0:
+            self._value = num
+            self._sign = sign
+        
+        return num
     
     
     def digit_to_int(self, digit: str) -> int:
@@ -228,17 +329,22 @@ class CustomNumber:
             int_value += self.digit_to_int(digit) * (self._numeral_system.base ** power)
             power += 1
         
+        if self._sign == self._NEGATIVE:
+            int_value = -abs(int_value)
+        
         return int_value
     
     
     def from_decimal(self, number: int) -> None:
         r"""Converts the number to the current numeral system and sets the internal value to it."""
         
-        if number < 0 and not self.numeral_system.sign_support:
-            raise ValueError("Signed integers are not supported.")
+        sign = self._POSITIVE
+        if number < 0:
+            sign = self._NEGATIVE
+        self._sign = sign
         
         value = ""
-        num = number
+        num = abs(number)
         while int(num) > 0:
             num = num / self.numeral_system.base
             remainder, integr = math.modf(num)
@@ -251,15 +357,6 @@ class CustomNumber:
         self._value = value
         
         
-        
-    
-    # TODO:
-    # and maybe refactor the GearIterator class
-    # and maybe a method to calculate the number of permutations
-    
-    # how to prevent more than one asyncio task to read from my iterator?
-
-
 
 class GearIterator:
     r"""GearIterator.

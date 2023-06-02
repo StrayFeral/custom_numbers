@@ -226,3 +226,109 @@ class TestCustomNumber():
         num.from_decimal(479)
         result = str(num)
         assert result == expected
+        
+    
+    def test_subtraction_negative_number_result(self):
+        expected = "-a" # -1
+        sysN1 = cn.CustomNumeralSystem("paf") # 0 1 2
+        numN1 = cn.CustomNumber(sysN1, "a")
+        numN2 = cn.CustomNumber(sysN1, "f")
+        result = numN1 - numN2
+        assert str(result) == expected
+    
+    
+    def test_absolute_value_positive_signed(self):
+        expected = "a"
+        sysN = cn.CustomNumeralSystem("paf") # 0 1 2
+        num = cn.CustomNumber(sysN, "+a")
+        result = num.absolute()
+        assert str(result) == expected
+    
+    
+    def test_absolute_value_negative_number(self):
+        expected = "a"
+        sysN = cn.CustomNumeralSystem("paf") # 0 1 2
+        num = cn.CustomNumber(sysN, "-a")
+        result = num.absolute()
+        assert str(result) == expected
+    
+    
+    def test_negative_number_subtraction1(self):
+        expected = "p" # 0
+        sysN1 = cn.CustomNumeralSystem("paf") # 0 1 2
+        numN1 = cn.CustomNumber(sysN1, "-a")
+        numN2 = cn.CustomNumber(sysN1, "-a")
+        result = numN1 - numN2
+        assert str(result) == expected
+    
+    
+    def test_negative_number_subtraction2(self):
+        expected = "-f" # -2
+        sysN1 = cn.CustomNumeralSystem("paf") # 0 1 2
+        numN1 = cn.CustomNumber(sysN1, "-a")
+        numN2 = cn.CustomNumber(sysN1, "a")
+        result = numN1 - numN2
+        assert str(result) == expected
+    
+    
+    def test_negative_number_addition1(self):
+        expected = "-f" # -2
+        sysN1 = cn.CustomNumeralSystem("paf") # 0 1 2
+        numN1 = cn.CustomNumber(sysN1, "-a")
+        numN2 = cn.CustomNumber(sysN1, "-a")
+        result = numN1 + numN2
+        assert str(result) == expected
+    
+    
+    def test_negative_number_addition2(self):
+        expected = "-a" # -1
+        sysN1 = cn.CustomNumeralSystem("paf") # 0 1 2
+        numN1 = cn.CustomNumber(sysN1, "-f")
+        numN2 = cn.CustomNumber(sysN1, "a")
+        result = numN1 + numN2
+        assert str(result) == expected
+    
+    
+    def test_multiplication(self):
+        expected = "25"
+        sysN1 = cn.CustomNumeralSystem("0123456789") # Common decimal system
+        numN1 = cn.CustomNumber(sysN1, "5")
+        numN2 = cn.CustomNumber(sysN1, "5")
+        result = numN1 * numN2
+        assert str(result) == expected
+    
+    
+    def test_division(self):
+        expected = "1"
+        sysN1 = cn.CustomNumeralSystem("0123456789") # Common decimal system
+        numN1 = cn.CustomNumber(sysN1, "5")
+        numN2 = cn.CustomNumber(sysN1, "5")
+        result = numN1 / numN2
+        assert str(result) == expected
+    
+    
+    def test_power(self):
+        expected = "25"
+        sysN1 = cn.CustomNumeralSystem("0123456789") # Common decimal system
+        numN1 = cn.CustomNumber(sysN1, "5")
+        numN2 = cn.CustomNumber(sysN1, "2")
+        result = numN1 ** numN2
+        assert str(result) == expected
+    
+    
+    def test_modulo1(self):
+        expected = "1"
+        sysN1 = cn.CustomNumeralSystem("0123456789") # Common decimal system
+        numN1 = cn.CustomNumber(sysN1, "5")
+        numN2 = cn.CustomNumber(sysN1, "2")
+        result = numN1 % numN2
+        assert str(result) == expected
+    
+    
+    def test_modulo2(self):
+        expected = "0"
+        sysN1 = cn.CustomNumeralSystem("0123456789") # Common decimal system
+        numN1 = cn.CustomNumber(sysN1, "5")
+        numN2 = cn.CustomNumber(sysN1, "5")
+        result = numN1 % numN2
+        assert str(result) == expected

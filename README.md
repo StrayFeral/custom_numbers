@@ -12,6 +12,8 @@ Evgueni Antonov 2023.
 
 This module was created and tested on Python 3.10.6, pip 23.1.2.
 
+First time published in May 2023.
+
 ## INSTALLATION
 
 ```
@@ -43,6 +45,11 @@ this may sound strange, in reality this is how it looks:
 
 > NOTE: Subsystems are not supported and I do not plan to implement this
 > feature.
+
+> NOTE: This module supports only positive numbers.
+
+> NOTE: This module supports only custom integer numbers. Custom
+> floating point numbers are not supported and will never be.
 
 ### QUICK RECAP ON EXISTING AND WELL-KNOWN NUMERAL SYSTEMS
 
@@ -135,8 +142,72 @@ sysN = cn.CustomNumeralSystem("kje5nCs21Q9vW0KMqc")
 > string by using the **forbidden_characters** property of the 
 > **CustomNumeralSystem** class.
 
-> NOTE: **CustomNumber** class defines only unsigned "integers"!
-> Therefore the plus and minus characters are forbidden.
+### TUTORIAL: BASIC OPERATIONS
+
+In **CustomNumeralSystem** class for the needs of basic validation, 
+the equality and iequality Python operators were implemented, so you 
+could compare two objects.
+
+However the comparisson would be by the list (basically the string)
+of the characters representing the digits, rather than standard
+Python object (reference) comparisson.
+
+```
+sys1 = cn.CustomNumeralSystem("paf")
+sys2 = cn.CustomNumeralSystem("paf")
+
+# The two objects are different, despite being initialized with
+# the same value
+id(sys1) == id(sys2) # False
+
+# However the set of characters (the digits) is the same, the 
+# base is the same, so I accept they are the same numeral systems
+sys1 == sys2 # True
+
+# And you could also test for inequality
+sys1 = cn.CustomNumeralSystem("paf")
+sys2 = cn.CustomNumeralSystem("paz")
+sys1 != sys2 # True
+```
+
+Signed custom numbers are supported as well.
+
+```
+sysN = cn.CustomNumeralSystem("paf")
+numN1 = cn.CustomNumber(sysN, "-a") # A negative number
+numN2 = cn.CustomNumber(sysN, "a")  # A positive number
+numN3 = cn.CustomNumber(sysN, "+a") # A positive number
+```
+
+Basic math operations are supported trough standard Python operators.
+
+```
+sysN = cn.CustomNumeralSystem("paf")
+numN1 = cn.CustomNumber(sysN, "-a")
+numN2 = cn.CustomNumber(sysN, "a")
+numN3 = cn.CustomNumber(sysN, "+a")
+
+# Comparisson
+numN1 == numN2
+numN1 != numN2
+numN1 > numN2
+numN1 < numN2
+numN1 >= numN2
+numN1 <= numN2
+
+# Basic mathematical operations
+numN1 + numN2   # Addition
+numN1 += numN2  # Augmented addition
+numN1 - numN2   # Subtraction
+numN1 -= numN2  # Augmented subtraction
+numN1 // numN2  # Floor division
+numN1 / numN2   # NOTE: This will perform floor division as well!
+# as floating point numbers are not supported by this class and will
+# never be.
+numN1 * numN2   # Multiplication
+numN1 ** numN2  # Power
+numN1 % numN2   # Modulo division
+```
 
 ### class CustomNumeralSystem
 
@@ -153,7 +224,6 @@ Args:
 PROPERTIES:
 
 ```
-sign_support -> bool
 forbidden_characters -> str
 base -> int
 ```

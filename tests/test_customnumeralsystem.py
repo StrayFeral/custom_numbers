@@ -25,22 +25,6 @@ class TestCustomNumeralSystem():
         assert result == expected
     
     
-    def test_sign_support(self):
-        # Warning: This might change in the future
-        expected = False
-        sysN = cn.CustomNumeralSystem("012")
-        result = sysN.sign_support
-        assert result == expected
-    
-    
-    def test_forbidden_characters(self):
-        # Warning: These might change in the future
-        expected = r"+-*/\s"
-        sysN = cn.CustomNumeralSystem("012")
-        result = sysN.forbidden_characters
-        assert result == expected
-    
-    
     def test_base(self):
         expected = 3
         sysN = cn.CustomNumeralSystem("012") # Base 3

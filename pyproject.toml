@@ -10,7 +10,7 @@ authors = [
 ]
 description = "Swiss-army knife for numbers of custom numeral systems."
 readme = "README.md"
-requires-python = ">=3.7"
+requires-python = ">=3.8"
 classifiers = [
     "Development Status :: 1 - Planning",
     "Programming Language :: Python :: 3",
