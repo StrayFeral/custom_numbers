@@ -66,3 +66,27 @@ class TestCustomNumeralSystem():
         sysN = cn.CustomNumeralSystem("paf")
         with pytest.raises(Exception):
             result = sysN.valid_number("") # Invalid
+    
+    
+    def test_equality(self):
+        expected = True
+        sysN1 = cn.CustomNumeralSystem("paf")
+        sysN2 = cn.CustomNumeralSystem("paf")
+        result = (sysN1 == sysN2)
+        assert result == expected
+    
+    
+    def test_equality_negative(self):
+        expected = False
+        sysN1 = cn.CustomNumeralSystem("paf")
+        sysN2 = cn.CustomNumeralSystem("pa")
+        result = (sysN1 == sysN2)
+        assert result == expected
+    
+    
+    def test_inequality(self):
+        expected = True
+        sysN1 = cn.CustomNumeralSystem("paf")
+        sysN2 = cn.CustomNumeralSystem("pa")
+        result = (sysN1 != sysN2)
+        assert result == expected

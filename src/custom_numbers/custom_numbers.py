@@ -9,9 +9,10 @@ https://github.com/StrayFeral/custom_numbers
 """
 
 import re
+import math
 from typing import List, Generator
-import threading
-import asyncio
+#import threading
+#import asyncio
 #import multiprocessing as mp
 #from ctypes import c_wtypes_p
 
@@ -74,6 +75,16 @@ class CustomNumeralSystem:
         return self._digits
     
     
+    def __eq__(self, other) -> bool:
+        """This compare both the digits and the Base."""
+        return self._digits == str(other)
+    
+    
+    def __ne__(self, other) -> bool:
+        """This compare both the digits and the Base."""
+        return self._digits != str(other)
+    
+    
     @property
     def sign_support(self) -> bool:
         r"""Shows the current state of the sign support - does it support signed numbers?"""
@@ -130,6 +141,66 @@ class CustomNumber:
         return self._value
     
     
+    def __eq__(self, other) -> bool:
+        if self.numeral_system != other.numeral_system:
+            raise ValueError("Numbers must be from the same numeral system.")
+        return self.to_decimal() == other.to_decimal()
+    
+    
+    def __ne__(self, other) -> bool:
+        if self.numeral_system != other.numeral_system:
+            raise ValueError("Numbers must be from the same numeral system.")
+        return self.to_decimal() != other.to_decimal()
+    
+    
+    def __ge__(self, other) -> bool:
+        if self.numeral_system != other.numeral_system:
+            raise ValueError("Numbers must be from the same numeral system.")
+        return self.to_decimal() >= other.to_decimal()
+    
+    
+    def __gt__(self, other) -> bool:
+        if self.numeral_system != other.numeral_system:
+            raise ValueError("Numbers must be from the same numeral system.")
+        return self.to_decimal() > other.to_decimal()
+    
+    
+    def __lt__(self, other) -> bool:
+        if self.numeral_system != other.numeral_system:
+            raise ValueError("Numbers must be from the same numeral system.")
+        return self.to_decimal() < other.to_decimal()
+    
+    
+    def __le__(self, other) -> bool:
+        if self.numeral_system != other.numeral_system:
+            raise ValueError("Numbers must be from the same numeral system.")
+        return self.to_decimal() <= other.to_decimal()
+    
+    
+    def __add__(self, other) -> object:
+        if self.numeral_system != other.numeral_system:
+            raise ValueError("Numbers must be from the same numeral system.")
+        result = self.to_decimal() + other.to_decimal()
+        num = CustomNumber(self.numeral_system, str(self.numeral_system)[0]) # Dummy init_value
+        num.from_decimal(result)
+        return num
+    
+    
+    def __sub__(self, other) -> object:
+        if self.numeral_system != other.numeral_system:
+            raise ValueError("Numbers must be from the same numeral system.")
+        result = self.to_decimal() - other.to_decimal()
+        print(f"-----------: {result}, {self.numeral_system}")
+        num = CustomNumber(self.numeral_system, str(self.numeral_system)[0]) # Dummy init_value
+        num.from_decimal(result)
+        return num
+    
+    
+    @property
+    def numeral_system(self) -> CustomNumeralSystem:
+        return self._numeral_system
+    
+    
     @property
     def init_value(self) -> str:
         return self._init_value
@@ -141,6 +212,10 @@ class CustomNumber:
         if len(digit) != 1:
             raise ValueError("Invalid digit. Must be one character.")
         return str(self._numeral_system).index(digit)
+    
+    
+    def int_to_digit(self, i: int) -> str:
+        return str(self.numeral_system)[i]
     
     
     def to_decimal(self) -> int:
@@ -156,10 +231,29 @@ class CustomNumber:
         return int_value
     
     
+    def from_decimal(self, number: int) -> None:
+        r"""Converts the number to the current numeral system and sets the internal value to it."""
+        
+        if number < 0 and not self.numeral_system.sign_support:
+            raise ValueError("Signed integers are not supported.")
+        
+        value = ""
+        num = number
+        while int(num) > 0:
+            num = num / self.numeral_system.base
+            remainder, integr = math.modf(num)
+            remainder *= self.numeral_system.base
+            value = f"{self.int_to_digit(int(remainder))}{value}"
+        
+        if number == 0:
+            value = f"{self.int_to_digit(0)}"
+        
+        self._value = value
+        
+        
+        
+    
     # TODO:
-    # comparison operators < > != == >= etc
-    # addition
-    # subtraction
     # and maybe refactor the GearIterator class
     # and maybe a method to calculate the number of permutations
     
