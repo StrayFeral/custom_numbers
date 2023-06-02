@@ -1,4 +1,6 @@
 #from .custom_numbers import CustomNumeralSystem, CustomNumber # Saving some typing to the users
+from typing import List
 
-__version__ = "0.0.1"
-__author__ = r"Evgueni Antonov (Evgueni.Antonov@gmail.com)"
+__version__: str = "0.0.1"
+__author__: str = r"Evgueni Antonov (Evgueni.Antonov@gmail.com)"
+__all__: List[str] = ["custom_numbers"]

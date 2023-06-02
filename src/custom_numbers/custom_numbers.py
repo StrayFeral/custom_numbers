@@ -12,12 +12,12 @@ import re
 import math
 from typing import List, Generator
 
-__version__ = "0.0.1"
-__author__ = r"Evgueni Antonov (Evgueni.Antonov@gmail.com)"
+__version__: str = "0.0.1"
+__author__: str = r"Evgueni Antonov (Evgueni.Antonov@gmail.com)"
 
 
 
-class CustomNumeralSystem:
+class CustomNumeralSystem(object):
     r"""Definition of custom numeral systems with basic consistency validation.
     
     Args:
@@ -139,7 +139,7 @@ class CustomNumeralSystem:
     
     
 
-class CustomNumber:
+class CustomNumber(object):
     r"""Definition of a number from the CustomNumericalSystem.
     
     Args:
@@ -175,6 +175,17 @@ class CustomNumber:
         if self._sign == self._NEGATIVE:
             return f"-{self._value}"
         return self._value
+    
+    
+    @property
+    def numeral_system(self) -> CustomNumeralSystem:
+        return self._numeral_system
+    
+    
+    @property
+    def init_value(self) -> str:
+        r"""Return the value the class was initialized with, as it was originally passed to the class."""
+        return self._init_value
     
     
     def __eq__(self, other) -> bool:
@@ -216,8 +227,8 @@ class CustomNumber:
     def __add__(self, other) -> object:
         if self.numeral_system != other.numeral_system:
             raise ValueError("Numbers must be from the same numeral system.")
-        result = self.to_decimal() + other.to_decimal()
-        num = CustomNumber(self.numeral_system, str(self.numeral_system)[0]) # Dummy init_value
+        result: int = self.to_decimal() + other.to_decimal()
+        num: CustomNumber = CustomNumber(self.numeral_system, str(self.numeral_system)[0]) # Dummy init_value
         num.from_decimal(result)
         return num
     
@@ -225,8 +236,8 @@ class CustomNumber:
     def __sub__(self, other) -> object:
         if self.numeral_system != other.numeral_system:
             raise ValueError("Numbers must be from the same numeral system.")
-        result = self.to_decimal() - other.to_decimal()
-        num = CustomNumber(self.numeral_system, str(self.numeral_system)[0]) # Dummy init_value
+        result: int = self.to_decimal() - other.to_decimal()
+        num: CustomNumber = CustomNumber(self.numeral_system, str(self.numeral_system)[0]) # Dummy init_value
         num.from_decimal(result)
         return num
     
@@ -234,8 +245,8 @@ class CustomNumber:
     def __mul__(self, other) -> object:
         if self.numeral_system != other.numeral_system:
             raise ValueError("Numbers must be from the same numeral system.")
-        result = self.to_decimal() * other.to_decimal()
-        num = CustomNumber(self.numeral_system, str(self.numeral_system)[0]) # Dummy init_value
+        result: int = self.to_decimal() * other.to_decimal()
+        num: CustomNumber = CustomNumber(self.numeral_system, str(self.numeral_system)[0]) # Dummy init_value
         num.from_decimal(result)
         return num
     
@@ -243,8 +254,8 @@ class CustomNumber:
     def __floordiv__(self, other) -> object:
         if self.numeral_system != other.numeral_system:
             raise ValueError("Numbers must be from the same numeral system.")
-        result = self.to_decimal() // other.to_decimal()
-        num = CustomNumber(self.numeral_system, str(self.numeral_system)[0]) # Dummy init_value
+        result: int = self.to_decimal() // other.to_decimal()
+        num: CustomNumber = CustomNumber(self.numeral_system, str(self.numeral_system)[0]) # Dummy init_value
         num.from_decimal(result)
         return num
     
@@ -260,8 +271,8 @@ class CustomNumber:
     def __pow__(self, other) -> object:
         if self.numeral_system != other.numeral_system:
             raise ValueError("Numbers must be from the same numeral system.")
-        result = self.to_decimal() ** other.to_decimal()
-        num = CustomNumber(self.numeral_system, str(self.numeral_system)[0]) # Dummy init_value
+        result: int = self.to_decimal() ** other.to_decimal()
+        num: CustomNumber = CustomNumber(self.numeral_system, str(self.numeral_system)[0]) # Dummy init_value
         num.from_decimal(result)
         return num
     
@@ -269,31 +280,20 @@ class CustomNumber:
     def __mod__(self, other) -> object:
         if self.numeral_system != other.numeral_system:
             raise ValueError("Numbers must be from the same numeral system.")
-        result = self.to_decimal() % other.to_decimal()
-        num = CustomNumber(self.numeral_system, str(self.numeral_system)[0]) # Dummy init_value
+        result: int = self.to_decimal() % other.to_decimal()
+        num: CustomNumber = CustomNumber(self.numeral_system, str(self.numeral_system)[0]) # Dummy init_value
         num.from_decimal(result)
         return num
-    
-    
-    @property
-    def numeral_system(self) -> CustomNumeralSystem:
-        return self._numeral_system
-    
-    
-    @property
-    def init_value(self) -> str:
-        r"""Return the value the class was initialized with, as it was originally passed to the class."""
-        return self._init_value
-    
+        
     
     def absolute(self, number: str = "") -> str:
         """Returns the absolute value."""
         
-        num = number
+        num: str = number
         if len(number) == 0:
             num = self._value
         
-        sign = self._POSITIVE
+        sign: str = self._POSITIVE
         if num[0] == self._NEGATIVE:
             sign = self._NEGATIVE
         
@@ -338,13 +338,13 @@ class CustomNumber:
     def from_decimal(self, number: int) -> None:
         r"""Converts the number to the current numeral system and sets the internal value to it."""
         
-        sign = self._POSITIVE
+        sign: str = self._POSITIVE
         if number < 0:
             sign = self._NEGATIVE
         self._sign = sign
         
-        value = ""
-        num = abs(number)
+        value: str = ""
+        num = float(abs(number))
         while int(num) > 0:
             num = num / self.numeral_system.base
             remainder, integr = math.modf(num)
@@ -358,7 +358,7 @@ class CustomNumber:
         
         
 
-class GearIterator:
+class GearIterator(object):
     r"""GearIterator.
     
     Briefly simulates old gear counters, like the old cars odometer.
@@ -379,8 +379,8 @@ class GearIterator:
     def __init__(self, numeral_system: CustomNumeralSystem, min_length: int = 0, max_length: int = 0, init_value: str = "") -> None:
         self._numeral_system: CustomNumeralSystem = numeral_system
         self._symbol_list: List[str] = [x for x in str(numeral_system)]
-        self._min_length = min_length
-        self._max_length = max_length
+        self._min_length: int = min_length
+        self._max_length: int = max_length
         self._init_value: str = init_value
         self._init_value_returned: bool = False
         self._index: int = 0
@@ -398,7 +398,7 @@ class GearIterator:
         
         self._init_value = init_value[::-1] # Reverse the string
         
-        min_len = min_length
+        min_len: int = min_length
         if min_len == 0:
             min_len = 1
         
@@ -426,7 +426,7 @@ class GearIterator:
         
     
     def __repr__(self) -> str:
-        result = ""
+        result: str = ""
         for gear in self._gears:
             result += gear[0]
         return result[::-1] # Reverse the string
@@ -442,7 +442,7 @@ class GearIterator:
             self._init_value_returned = True
             return repr(self)
         
-        spin_wheels = True
+        spin_wheels: bool = True
         i = 0
         while spin_wheels:
             self._gears[i].pop(0)
@@ -473,7 +473,7 @@ class GearIterator:
         return self
     
     
-    def __exit__(self, exc_type, exc_value, exc_tb) -> bool:
+    def __exit__(self, exc_type: object, exc_value: object, exc_tb: object) -> bool:
         r"""Context management protocol.
         
         StopIteration exception will not be propagated.
