@@ -12,7 +12,7 @@ import re
 import math
 from typing import List, Generator
 
-__version__: str = "1.0.0"
+__version__: str = "1.1.0"
 __author__: str = r"Evgueni Antonov (Evgueni.Antonov@gmail.com)"
 
 
