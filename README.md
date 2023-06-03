@@ -313,10 +313,3 @@ combinations -> int
 ```
 
 > The class implements the Python context management protocol.
-
-### class GearIterator
-
-The GearIterator in a generator form.
-    
-I wrote this class as part of an exercise. Not sure if anyone would need it,
-but would leave it here.
