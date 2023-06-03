@@ -384,6 +384,7 @@ class GearIterator(object):
         self._init_value: str = init_value
         self._init_value_returned: bool = False
         self._index: int = 0
+        self._combinations: int = 0
         
         # Basic validation ...
         if max_length > 0 and min_length > max_length:
@@ -423,6 +424,33 @@ class GearIterator(object):
                     seq.pop(0)
             
             self._gears.append(seq)
+    
+    
+    @property
+    def combinations(self) -> int:
+        """Combinations calculation.
+        
+        People may argue with me here, but in a set of only two values,
+        like {0, 1}, if we make two gears out of these and rotate them,
+        the values would be:
+        # 00
+        # 01
+        # 10
+        # 11
+        And while for mathematicians "01" == "10", for me they are not
+        the same.
+        """
+        
+        if self._combinations == 0:
+            ## C(n, r) = (n + r - 1)! / (r!(n - 1)!)
+            n: int = len(self._symbol_list)
+            r: int = self._max_length
+            #c: int = math.factorial(n + r - 1) // math.factorial(r) * math.factorial(n - 1)
+            c: int = n * r
+            
+            self._combinations = c
+        
+        return self._combinations
         
     
     def __repr__(self) -> str:

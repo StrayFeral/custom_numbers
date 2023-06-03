@@ -121,6 +121,14 @@ class TestGearIterator():
     #    pass
     
     
+    def test_combinations_calculation(self):
+        expected = 4
+        sysN = cn.CustomNumeralSystem("01")
+        it = cn.GearIterator(sysN, 0, 2)
+        result = it.combinations
+        assert result == expected
+    
+    
     @classmethod
     def teardown_class(cls):
         del cls.scenario1
