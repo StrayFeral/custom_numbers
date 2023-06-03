@@ -46,8 +46,6 @@ this may sound strange, in reality this is how it looks:
 > NOTE: Subsystems are not supported and I do not plan to implement this
 > feature.
 
-> NOTE: This module supports only positive numbers.
-
 > NOTE: This module supports only custom integer numbers. Custom
 > floating point numbers are not supported and will never be.
 
