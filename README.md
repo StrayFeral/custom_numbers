@@ -1,4 +1,4 @@
-# custom_numbers 0.0.1
+# custom_numbers 1.0.0
 
 ## DESCRIPTION
 
