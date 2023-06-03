@@ -1,4 +1,4 @@
-# custom_numbers 1.1.1
+# custom_numbers 1.1.2
 
 ## DESCRIPTION
 
