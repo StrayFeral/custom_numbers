@@ -1,11 +1,8 @@
 import pytest
 import pickle
 import sys
-
 from custom_numbers import custom_numbers as cn
 
-
-# ================================================== GEARITERATOR TESTS
 
 # Common parameter
 sys3 = cn.CustomNumeralSystem("pba")
@@ -23,9 +20,6 @@ expected1 = [
     ("p"),
     ("b"),
     ("a"),
-    ("pp"),
-    ("pb"),
-    ("pa"),
     ("bp"),
     ("bb"),
     ("ba"),
@@ -40,8 +34,8 @@ expected2 = [
     ("ap"),
     ("ab"),
     ("aa"),
-    ("ppp"),
-    ("ppb"),
+    ("bpp"),
+    ("bpb"),
 ]
 
 
@@ -103,17 +97,17 @@ class TestGearIterator():
         """Testing serialization"""
         
         our_iterator = self.scenario2
-        assert next(our_iterator) == "ppa"
+        assert next(our_iterator) == "bpa"
         serialized = pickle.dumps(our_iterator)
         print("\n-----")
         print("Serialized length: {0}".format(len(serialized))) # 302
         print("Serialized size: {0}".format(sys.getsizeof(serialized))) # 335
         
-        assert next(our_iterator) == "pbp"
-        assert next(our_iterator) == "pbb"
+        assert next(our_iterator) == "bbp"
+        assert next(our_iterator) == "bbb"
         
         our_iterator = pickle.loads(serialized)
-        assert next(our_iterator) == "pbp"
+        assert next(our_iterator) == "bbp"
     
     
     #def test_scenario4_thread_safe(self):

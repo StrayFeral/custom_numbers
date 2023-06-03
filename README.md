@@ -209,6 +209,28 @@ numN1 ** numN2  # Power
 numN1 % numN2   # Modulo division
 ```
 
+Using the iterator:
+
+```
+sysN = cn.CustomNumeralSystem("paf")
+it = cn.GearIterator(sysN, 0, 2)
+next(it)    # "p" # "p" assumes to be the analog of the zero
+next(it)    # "a"
+next(it)    # "f"
+next(it)    # "ap"
+next(it)    # "aa"
+# and so on. You get the idea.
+
+# The iterator could also be initialized with an init_value which is
+# de-facto a custom number from the chosen CustomNumeralSystem,
+# but for convenience I left the number to be a string, as you may
+# wish or not to initialize at all:
+it = cn.GearIterator(sysN, 0, 2, "af")
+```
+
+> NOTE: If initialized, the iterator will strip any leading "zeroes"
+> (so to speak) from the given init_value.
+
 ### class CustomNumeralSystem
 
 Defines and declares a custom numeral system.
@@ -284,3 +306,19 @@ Args:
     max_length: Maximum length, default is zero - means no limit.
     init_value: Value to initialize with.
 ```
+
+PROPERTIES:
+
+```
+combinations -> int
+    Returns the number of possible combinations (iterations).
+```
+
+> The class implements the Python context management protocol.
+
+### class GearIterator
+
+The GearIterator in a generator form.
+    
+I wrote this class as part of an exercise. Not sure if anyone would need it,
+but would leave it here.

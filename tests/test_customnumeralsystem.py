@@ -1,9 +1,6 @@
 import pytest
-
 from custom_numbers import custom_numbers as cn
 
-
-# =========================================== CUSTOMNUMERALSYSTEM TESTS
 
 class TestCustomNumeralSystem():
     r"""CustomNumeralSystem test class."""

@@ -1,9 +1,5 @@
 import pytest
-
 from custom_numbers import custom_numbers as cn
-
-
-# ================================================== CUSTOMNUMBER TESTS
 
 
 class TestCustomNumber():

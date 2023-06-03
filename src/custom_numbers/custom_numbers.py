@@ -17,7 +17,7 @@ __author__: str = r"Evgueni Antonov (Evgueni.Antonov@gmail.com)"
 
 
 
-class CustomNumeralSystem(object):
+class CustomNumeralSystem:
     r"""Definition of custom numeral systems with basic consistency validation.
     
     Args:
@@ -46,9 +46,6 @@ class CustomNumeralSystem(object):
         # "p" # "p" assumes to be the analog of the zero
         # "a"
         # "f"
-        # "pp"
-        # "pa"
-        # "pf"
         # "ap"
         # "aa"
         # and so on. You get the idea.
@@ -139,7 +136,7 @@ class CustomNumeralSystem(object):
     
     
 
-class CustomNumber(object):
+class CustomNumber:
     r"""Definition of a number from the CustomNumericalSystem.
     
     Args:
@@ -358,7 +355,7 @@ class CustomNumber(object):
         
         
 
-class GearIterator(object):
+class GearIterator:
     r"""GearIterator.
     
     Briefly simulates old gear counters, like the old cars odometer.
@@ -390,14 +387,21 @@ class GearIterator(object):
         if max_length > 0 and min_length > max_length:
             raise ValueError("min_length is greather than max_length.")
         
-        if len(init_value) > 0 and (len(init_value) < min_length or (max_length > 0 and len(init_value) > max_length)):
-            raise ValueError("Incorrect init_value length.")
+        if len(init_value) > 0:
+            if len(init_value) < min_length or (max_length > 0 and len(init_value) > max_length):
+                raise ValueError("Incorrect init_value length.")
+            
+            if not numeral_system.valid_number(init_value):
+                raise ValueError("Invalid characters in init_value, which are not in the chosen numeral system.")
+            
+            if init_value == str(numeral_system)[0] * len(init_value):
+                raise ValueError("Init_value contains only smallest digits (zero-equivalents).")
         
-        if len(init_value) > 0 and not numeral_system.valid_number(init_value):
-            raise ValueError("Invalid characters in number, which are not in the chosen numeral system.")
-
+            # Strip the leading "zeroes"
+            while init_value[0] == str(numeral_system)[0]:
+                init_value = init_value[1:]
         
-        self._init_value = init_value[::-1] # Reverse the string
+            self._init_value = init_value[::-1] # Reverse the string
         
         min_len: int = min_length
         if min_len == 0:
@@ -433,8 +437,8 @@ class GearIterator(object):
         People may argue with me here, but in a set of only two values,
         like {0, 1}, if we make two gears out of these and rotate them,
         the values would be:
-        # 00
-        # 01
+        # 0
+        # 1
         # 10
         # 11
         And while for mathematicians "01" == "10", for me they are not
@@ -483,6 +487,7 @@ class GearIterator(object):
                 # Add a new gear
                 if i == len(self._gears) and i < self._max_length:
                     self._gears.append(self._symbol_list.copy())
+                    self._gears[i].pop(0) # Remove the "zero"
                     spin_wheels = False
                 
                 if i == self._max_length:
@@ -512,31 +517,13 @@ class GearIterator(object):
 
 
 
-
-# ~ class GearGenerator:
-    # ~ r"""The GearIterator in a generator form."""
-    
-    # ~ def generate(self, symbol_list: List[str], min_length: int = 0, max_length: int = 0, init_value: str = "") -> Generator[str]:
-        # ~ for gear_value in GearIterator(symbol_list, min_length, max_length, init_value):
-            # ~ with asyncio.Lock():
-                # ~ yield gear_value
-
-
-# ~ class AsyncGearGenerator:
-    # ~ r"""The GearIterator in a generator form."""
-    
-    # ~ async def generate(self, symbol_list: List[str], min_length: int = 0, max_length: int = 0, init_value: str = "") -> Generator[str]:
-        # ~ async for gear_value in GearIterator(symbol_list, min_length, max_length, init_value):
-            # ~ async with asyncio.Lock():
-                # ~ yield gear_value
-
-# We can then create one instance of the asyncio.Lock shared among the coroutines.
-# This can be achieved in the main() coroutine, used as the entry point to the program.
-# We can then create a large number of coroutines and pass the shared lock. 
-# Each coroutine will have a unique integer argument and a random 
-# floating point value between 0 and 1, which will be how long the coroutine will sleep while holding the lock.
-
-# The coroutines are created in a list comprehension and provided to the 
-# asyncio.gather() function. The main() coroutine will then block until all coroutines are complete.
-
-
+#class GearGenerator:
+#    r"""The GearIterator in a generator form.
+#    
+#    I wrote this class as part of an exercise. Not sure if anyone would need it,
+#    but would leave it here.
+#    """
+#    
+#    def generate(self, numeral_system: CustomNumeralSystem, min_length: int = 0, max_length: int = 0, init_value: str = "") -> Generator[str, None, None]:
+#        for gear_value in GearIterator(numeral_system, min_length, max_length, init_value):
+#            yield gear_value
