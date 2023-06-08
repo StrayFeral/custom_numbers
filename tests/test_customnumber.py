@@ -8,7 +8,7 @@ class TestCustomNumber():
     def test_invalid_number(self):
         sysN = cn.CustomNumeralSystem("paf")
         with pytest.raises(Exception):
-            num = cn.CustomNumber(sysN, "x") # Invalid
+            num = cn.CustomNumber(sysN, "x")  # Invalid
     
     
     def test_repr(self):
@@ -29,7 +29,7 @@ class TestCustomNumber():
     
     def test_digit_to_int(self):
         expected = 1
-        sysN = cn.CustomNumeralSystem("paf") # 0 1 2
+        sysN = cn.CustomNumeralSystem("paf")  # 0 1 2
         num = cn.CustomNumber(sysN, "aaa")
         result = num.digit_to_int("a")
         assert result == expected
@@ -39,21 +39,21 @@ class TestCustomNumber():
         """Just in case"""
         
         expected = 15
-        sysN = cn.CustomNumeralSystem("0123456789abcdef") # Common hex system
+        sysN = cn.CustomNumeralSystem("0123456789abcdef")  # Common hex system
         num = cn.CustomNumber(sysN, "aaa")
         result = num.digit_to_int("f")
         assert result == expected
     
     
     def test_digit_to_int_negative_more_characters(self):
-        sysN = cn.CustomNumeralSystem("paf") # 0 1 2
+        sysN = cn.CustomNumeralSystem("paf")  # 0 1 2
         num = cn.CustomNumber(sysN, "aaa")
         with pytest.raises(Exception):
             result = num.digit_to_int("aa")
     
     
     def test_digit_to_int_negative_empty(self):
-        sysN = cn.CustomNumeralSystem("paf") # 0 1 2
+        sysN = cn.CustomNumeralSystem("paf")  # 0 1 2
         num = cn.CustomNumber(sysN, "aaa")
         with pytest.raises(Exception):
             result = num.digit_to_int("")
@@ -61,7 +61,7 @@ class TestCustomNumber():
     
     def test_hex_to_decimal(self):
         expected = 240
-        sysN = cn.CustomNumeralSystem("0123456789abcdef") # Common hex system
+        sysN = cn.CustomNumeralSystem("0123456789abcdef")  # Common hex system
         num = cn.CustomNumber(sysN, "f0")
         result = num.to_decimal()
         assert result == expected
@@ -69,7 +69,7 @@ class TestCustomNumber():
     
     def test_bin_to_decimal(self):
         expected = 101
-        sysN = cn.CustomNumeralSystem("01") # Common bin system
+        sysN = cn.CustomNumeralSystem("01")  # Common bin system
         num = cn.CustomNumber(sysN, "1100101")
         result = num.to_decimal()
         assert result == expected
@@ -104,7 +104,6 @@ class TestCustomNumber():
     
     
     def test_equality_different_systems(self):
-        expected = False
         sysN1 = cn.CustomNumeralSystem("paf")
         numN1 = cn.CustomNumber(sysN1, "aa")
         sysN2 = cn.CustomNumeralSystem("paft")
@@ -165,7 +164,7 @@ class TestCustomNumber():
     
     def test_addition(self):
         expected = "a"
-        sysN1 = cn.CustomNumeralSystem("paf") # 0 1 2
+        sysN1 = cn.CustomNumeralSystem("paf")  # 0 1 2
         numN1 = cn.CustomNumber(sysN1, "p")
         sysN2 = cn.CustomNumeralSystem("paf")
         numN2 = cn.CustomNumber(sysN2, "a")
@@ -175,7 +174,7 @@ class TestCustomNumber():
     
     def test_subtraction(self):
         expected = "a"
-        sysN1 = cn.CustomNumeralSystem("paf") # 0 1 2
+        sysN1 = cn.CustomNumeralSystem("paf")  # 0 1 2
         numN1 = cn.CustomNumber(sysN1, "f")
         sysN2 = cn.CustomNumeralSystem("paf")
         numN2 = cn.CustomNumber(sysN2, "a")
@@ -186,7 +185,7 @@ class TestCustomNumber():
     def test_augmented_addition(self):
         expected1 = "f"
         expected2 = "a"
-        sysN1 = cn.CustomNumeralSystem("paf") # 0 1 2
+        sysN1 = cn.CustomNumeralSystem("paf")  # 0 1 2
         numN1 = cn.CustomNumber(sysN1, "a")
         sysN2 = cn.CustomNumeralSystem("paf")
         numN2 = cn.CustomNumber(sysN2, "a")
@@ -198,7 +197,7 @@ class TestCustomNumber():
     def test_augmented_subtraction(self):
         expected1 = "p"
         expected2 = "a"
-        sysN1 = cn.CustomNumeralSystem("paf") # 0 1 2
+        sysN1 = cn.CustomNumeralSystem("paf")  # 0 1 2
         numN1 = cn.CustomNumber(sysN1, "a")
         sysN2 = cn.CustomNumeralSystem("paf")
         numN2 = cn.CustomNumber(sysN2, "a")
@@ -209,7 +208,7 @@ class TestCustomNumber():
     
     def test_int_to_digit(self):
         expected = "a"
-        sysN = cn.CustomNumeralSystem("paf") # 0 1 2
+        sysN = cn.CustomNumeralSystem("paf")  # 0 1 2
         num = cn.CustomNumber(sysN, "aaa")
         result = num.int_to_digit(1)
         assert result == expected
@@ -217,16 +216,16 @@ class TestCustomNumber():
     
     def test_decimal_to_hex(self):
         expected = "1df"
-        sysN = cn.CustomNumeralSystem("0123456789abcdef") # Common hex system
-        num = cn.CustomNumber(sysN, "f0") # The value is irrelevant here, we just want to instantiate
+        sysN = cn.CustomNumeralSystem("0123456789abcdef")  # Common hex system
+        num = cn.CustomNumber(sysN, "f0")  # The value is irrelevant here, we just want to instantiate
         num.from_decimal(479)
         result = str(num)
         assert result == expected
         
     
     def test_subtraction_negative_number_result(self):
-        expected = "-a" # -1
-        sysN1 = cn.CustomNumeralSystem("paf") # 0 1 2
+        expected = "-a"  # -1
+        sysN1 = cn.CustomNumeralSystem("paf")  # 0 1 2
         numN1 = cn.CustomNumber(sysN1, "a")
         numN2 = cn.CustomNumber(sysN1, "f")
         result = numN1 - numN2
@@ -235,7 +234,7 @@ class TestCustomNumber():
     
     def test_absolute_value_positive_signed(self):
         expected = "a"
-        sysN = cn.CustomNumeralSystem("paf") # 0 1 2
+        sysN = cn.CustomNumeralSystem("paf")  # 0 1 2
         num = cn.CustomNumber(sysN, "+a")
         result = num.absolute()
         assert str(result) == expected
@@ -243,15 +242,15 @@ class TestCustomNumber():
     
     def test_absolute_value_negative_number(self):
         expected = "a"
-        sysN = cn.CustomNumeralSystem("paf") # 0 1 2
+        sysN = cn.CustomNumeralSystem("paf")  # 0 1 2
         num = cn.CustomNumber(sysN, "-a")
         result = num.absolute()
         assert str(result) == expected
     
     
     def test_negative_number_subtraction1(self):
-        expected = "p" # 0
-        sysN1 = cn.CustomNumeralSystem("paf") # 0 1 2
+        expected = "p"  # 0
+        sysN1 = cn.CustomNumeralSystem("paf")  # 0 1 2
         numN1 = cn.CustomNumber(sysN1, "-a")
         numN2 = cn.CustomNumber(sysN1, "-a")
         result = numN1 - numN2
@@ -259,8 +258,8 @@ class TestCustomNumber():
     
     
     def test_negative_number_subtraction2(self):
-        expected = "-f" # -2
-        sysN1 = cn.CustomNumeralSystem("paf") # 0 1 2
+        expected = "-f"  # -2
+        sysN1 = cn.CustomNumeralSystem("paf")  # 0 1 2
         numN1 = cn.CustomNumber(sysN1, "-a")
         numN2 = cn.CustomNumber(sysN1, "a")
         result = numN1 - numN2
@@ -268,8 +267,8 @@ class TestCustomNumber():
     
     
     def test_negative_number_addition1(self):
-        expected = "-f" # -2
-        sysN1 = cn.CustomNumeralSystem("paf") # 0 1 2
+        expected = "-f"  # -2
+        sysN1 = cn.CustomNumeralSystem("paf")  # 0 1 2
         numN1 = cn.CustomNumber(sysN1, "-a")
         numN2 = cn.CustomNumber(sysN1, "-a")
         result = numN1 + numN2
@@ -277,8 +276,8 @@ class TestCustomNumber():
     
     
     def test_negative_number_addition2(self):
-        expected = "-a" # -1
-        sysN1 = cn.CustomNumeralSystem("paf") # 0 1 2
+        expected = "-a"  # -1
+        sysN1 = cn.CustomNumeralSystem("paf")  # 0 1 2
         numN1 = cn.CustomNumber(sysN1, "-f")
         numN2 = cn.CustomNumber(sysN1, "a")
         result = numN1 + numN2
@@ -287,7 +286,7 @@ class TestCustomNumber():
     
     def test_multiplication(self):
         expected = "25"
-        sysN1 = cn.CustomNumeralSystem("0123456789") # Common decimal system
+        sysN1 = cn.CustomNumeralSystem("0123456789")  # Common decimal system
         numN1 = cn.CustomNumber(sysN1, "5")
         numN2 = cn.CustomNumber(sysN1, "5")
         result = numN1 * numN2
@@ -296,7 +295,7 @@ class TestCustomNumber():
     
     def test_division(self):
         expected = "1"
-        sysN1 = cn.CustomNumeralSystem("0123456789") # Common decimal system
+        sysN1 = cn.CustomNumeralSystem("0123456789")  # Common decimal system
         numN1 = cn.CustomNumber(sysN1, "5")
         numN2 = cn.CustomNumber(sysN1, "5")
         result = numN1 / numN2
@@ -305,7 +304,7 @@ class TestCustomNumber():
     
     def test_power(self):
         expected = "25"
-        sysN1 = cn.CustomNumeralSystem("0123456789") # Common decimal system
+        sysN1 = cn.CustomNumeralSystem("0123456789")  # Common decimal system
         numN1 = cn.CustomNumber(sysN1, "5")
         numN2 = cn.CustomNumber(sysN1, "2")
         result = numN1 ** numN2
@@ -314,7 +313,7 @@ class TestCustomNumber():
     
     def test_modulo1(self):
         expected = "1"
-        sysN1 = cn.CustomNumeralSystem("0123456789") # Common decimal system
+        sysN1 = cn.CustomNumeralSystem("0123456789")  # Common decimal system
         numN1 = cn.CustomNumber(sysN1, "5")
         numN2 = cn.CustomNumber(sysN1, "2")
         result = numN1 % numN2
@@ -323,7 +322,7 @@ class TestCustomNumber():
     
     def test_modulo2(self):
         expected = "0"
-        sysN1 = cn.CustomNumeralSystem("0123456789") # Common decimal system
+        sysN1 = cn.CustomNumeralSystem("0123456789")  # Common decimal system
         numN1 = cn.CustomNumber(sysN1, "5")
         numN2 = cn.CustomNumber(sysN1, "5")
         result = numN1 % numN2

@@ -100,19 +100,14 @@ class TestGearIterator():
         assert next(our_iterator) == "bpa"
         serialized = pickle.dumps(our_iterator)
         print("\n-----")
-        print("Serialized length: {0}".format(len(serialized))) # 302
-        print("Serialized size: {0}".format(sys.getsizeof(serialized))) # 335
+        print("Serialized length: {0}".format(len(serialized)))  # 302
+        print("Serialized size: {0}".format(sys.getsizeof(serialized)))  # 335
         
         assert next(our_iterator) == "bbp"
         assert next(our_iterator) == "bbb"
         
         our_iterator = pickle.loads(serialized)
         assert next(our_iterator) == "bbp"
-    
-    
-    #def test_scenario4_thread_safe(self):
-    #    """Testing thread safe"""
-    #    pass
     
     
     def test_combinations_calculation(self):
@@ -127,3 +122,4 @@ class TestGearIterator():
     def teardown_class(cls):
         del cls.scenario1
         del cls.scenario2
+

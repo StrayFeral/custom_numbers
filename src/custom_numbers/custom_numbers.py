@@ -10,7 +10,7 @@ https://github.com/StrayFeral/custom_numbers
 
 import re
 import math
-from typing import List, Generator
+from typing import List
 
 __version__: str = "1.1.2"
 __author__: str = r"Evgueni Antonov (Evgueni.Antonov@gmail.com)"
@@ -159,10 +159,10 @@ class CustomNumber:
     
     def __init__(self, numeral_system: CustomNumeralSystem, number: str) -> None:
         self._numeral_system: CustomNumeralSystem = numeral_system
-        self._init_value: str = number # Just in case we will keep the original value
+        self._init_value: str = number  # Just in case we will keep the original value
         self._value: str = number
         
-        self.absolute() # This will set the sign as well
+        self.absolute()  # This will set the sign as well
         
         if not numeral_system.valid_number(self._value):
             raise ValueError("Invalid characters in number, which are not in the chosen numeral system.")
@@ -225,7 +225,7 @@ class CustomNumber:
         if self.numeral_system != other.numeral_system:
             raise ValueError("Numbers must be from the same numeral system.")
         result: int = self.to_decimal() + other.to_decimal()
-        num: CustomNumber = CustomNumber(self.numeral_system, str(self.numeral_system)[0]) # Dummy init_value
+        num: CustomNumber = CustomNumber(self.numeral_system, str(self.numeral_system)[0])  # Dummy init_value
         num.from_decimal(result)
         return num
     
@@ -234,7 +234,7 @@ class CustomNumber:
         if self.numeral_system != other.numeral_system:
             raise ValueError("Numbers must be from the same numeral system.")
         result: int = self.to_decimal() - other.to_decimal()
-        num: CustomNumber = CustomNumber(self.numeral_system, str(self.numeral_system)[0]) # Dummy init_value
+        num: CustomNumber = CustomNumber(self.numeral_system, str(self.numeral_system)[0])  # Dummy init_value
         num.from_decimal(result)
         return num
     
@@ -243,7 +243,7 @@ class CustomNumber:
         if self.numeral_system != other.numeral_system:
             raise ValueError("Numbers must be from the same numeral system.")
         result: int = self.to_decimal() * other.to_decimal()
-        num: CustomNumber = CustomNumber(self.numeral_system, str(self.numeral_system)[0]) # Dummy init_value
+        num: CustomNumber = CustomNumber(self.numeral_system, str(self.numeral_system)[0])  # Dummy init_value
         num.from_decimal(result)
         return num
     
@@ -252,7 +252,7 @@ class CustomNumber:
         if self.numeral_system != other.numeral_system:
             raise ValueError("Numbers must be from the same numeral system.")
         result: int = self.to_decimal() // other.to_decimal()
-        num: CustomNumber = CustomNumber(self.numeral_system, str(self.numeral_system)[0]) # Dummy init_value
+        num: CustomNumber = CustomNumber(self.numeral_system, str(self.numeral_system)[0])  # Dummy init_value
         num.from_decimal(result)
         return num
     
@@ -269,7 +269,7 @@ class CustomNumber:
         if self.numeral_system != other.numeral_system:
             raise ValueError("Numbers must be from the same numeral system.")
         result: int = self.to_decimal() ** other.to_decimal()
-        num: CustomNumber = CustomNumber(self.numeral_system, str(self.numeral_system)[0]) # Dummy init_value
+        num: CustomNumber = CustomNumber(self.numeral_system, str(self.numeral_system)[0])  # Dummy init_value
         num.from_decimal(result)
         return num
     
@@ -278,7 +278,7 @@ class CustomNumber:
         if self.numeral_system != other.numeral_system:
             raise ValueError("Numbers must be from the same numeral system.")
         result: int = self.to_decimal() % other.to_decimal()
-        num: CustomNumber = CustomNumber(self.numeral_system, str(self.numeral_system)[0]) # Dummy init_value
+        num: CustomNumber = CustomNumber(self.numeral_system, str(self.numeral_system)[0])  # Dummy init_value
         num.from_decimal(result)
         return num
         
@@ -295,7 +295,7 @@ class CustomNumber:
             sign = self._NEGATIVE
         
         if num[0] == self._POSITIVE or num[0] == self._NEGATIVE:
-            num = num[1:] # Strip sign
+            num = num[1:]  # Strip sign
         
         if len(number) == 0:
             self._value = num
@@ -401,7 +401,7 @@ class GearIterator:
             while init_value[0] == str(numeral_system)[0]:
                 init_value = init_value[1:]
         
-            self._init_value = init_value[::-1] # Reverse the string
+            self._init_value = init_value[::-1]  # Reverse the string
         
         min_len: int = min_length
         if min_len == 0:
@@ -446,10 +446,8 @@ class GearIterator:
         """
         
         if self._combinations == 0:
-            ## C(n, r) = (n + r - 1)! / (r!(n - 1)!)
             n: int = len(self._symbol_list)
             r: int = self._max_length
-            #c: int = math.factorial(n + r - 1) // math.factorial(r) * math.factorial(n - 1)
             c: int = n * r
             
             self._combinations = c
@@ -461,7 +459,7 @@ class GearIterator:
         result: str = ""
         for gear in self._gears:
             result += gear[0]
-        return result[::-1] # Reverse the string
+        return result[::-1]  # Reverse the string
     
     
     def __iter__(self) -> object:
@@ -487,12 +485,12 @@ class GearIterator:
                 # Add a new gear
                 if i == len(self._gears) and i < self._max_length:
                     self._gears.append(self._symbol_list.copy())
-                    self._gears[i].pop(0) # Remove the "zero"
+                    self._gears[i].pop(0)  # Remove the "zero"
                     spin_wheels = False
                 
                 if i == self._max_length:
                     raise StopIteration
-            else: # Wheel not yet reached the final set value
+            else:  # Wheel not yet reached the final set value
                 spin_wheels = False
         
         return repr(self)
@@ -513,17 +511,4 @@ class GearIterator:
         
         Not sure we would need this, but it's there.
         """
-        return True # We won't propagate the StopIteration exception
-
-
-
-#class GearGenerator:
-#    r"""The GearIterator in a generator form.
-#    
-#    I wrote this class as part of an exercise. Not sure if anyone would need it,
-#    but would leave it here.
-#    """
-#    
-#    def generate(self, numeral_system: CustomNumeralSystem, min_length: int = 0, max_length: int = 0, init_value: str = "") -> Generator[str, None, None]:
-#        for gear_value in GearIterator(numeral_system, min_length, max_length, init_value):
-#            yield gear_value
+        return True  # We won't propagate the StopIteration exception

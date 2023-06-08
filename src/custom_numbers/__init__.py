@@ -1,4 +1,3 @@
-#from .custom_numbers import CustomNumeralSystem, CustomNumber # Saving some typing to the users
 from typing import List
 
 __version__: str = "1.1.2"
