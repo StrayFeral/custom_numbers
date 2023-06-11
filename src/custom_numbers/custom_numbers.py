@@ -161,10 +161,12 @@ class CustomNumber:
     def __init__(self, numeral_system: CustomNumeralSystem, number: str) -> None:
         self._numeral_system: CustomNumeralSystem = numeral_system
         self._init_value: str = number  # Just in case we will keep the original value
-        self._value: str = number
-
-        self.absolute()  # This will set the sign as well
-
+        self._value: str = self.__abs__(number)
+        self._sign: str = self._POSITIVE
+        
+        if number[0] == self._NEGATIVE:
+            self._sign = self._NEGATIVE
+        
         if not numeral_system.valid_number(self._value):
             raise ValueError("Invalid characters in number, which are not in the chosen numeral system.")
 
@@ -284,23 +286,16 @@ class CustomNumber:
         return num
 
     
-    def absolute(self, number: str = "") -> str:
+    def __abs__(self, number: str = "") -> str:
         """Returns the absolute value."""
 
         num: str = number
+        
         if len(number) == 0:
             num = self._value
 
-        sign: str = self._POSITIVE
-        if num[0] == self._NEGATIVE:
-            sign = self._NEGATIVE
-
         if num[0] == self._POSITIVE or num[0] == self._NEGATIVE:
             num = num[1:]  # Strip sign
-
-        if len(number) == 0:
-            self._value = num
-            self._sign = sign
 
         return num
 

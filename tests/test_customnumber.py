@@ -236,17 +236,21 @@ class TestCustomNumber:
     
     def test_absolute_value_positive_signed(self):
         expected = "a"
+        original = "a"
         sysN = cn.CustomNumeralSystem("paf")  # 0 1 2
         num = cn.CustomNumber(sysN, "+a")
-        result = num.absolute()
+        result = abs(num)
+        assert str(num) == original
         assert str(result) == expected
 
     
     def test_absolute_value_negative_number(self):
         expected = "a"
+        original = "-a"
         sysN = cn.CustomNumeralSystem("paf")  # 0 1 2
-        num = cn.CustomNumber(sysN, "-a")
-        result = num.absolute()
+        num = cn.CustomNumber(sysN, original)
+        result = abs(num)
+        assert str(num) == original
         assert str(result) == expected
 
     
@@ -328,5 +332,15 @@ class TestCustomNumber:
         numN1 = cn.CustomNumber(sysN1, "5")
         numN2 = cn.CustomNumber(sysN1, "5")
         result = numN1 % numN2
+        assert str(result) == expected
+    
+    
+    def test_issue2(self):
+        expected = "bc"
+        original = "-bc"
+        sysN = cn.CustomNumeralSystem("abc")  # 0 1 2
+        num = cn.CustomNumber(sysN, original)
+        result = abs(num)
+        assert str(num) == original
         assert str(result) == expected
 

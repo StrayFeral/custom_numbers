@@ -1,3 +1,8 @@
+### v1.1.4
+
+- Fixed Issue #2: .absolute() modifies the original value
+- Implemented request #3: Renamed method .absolute() to __abs__
+
 ### v1.1.3
 
 - Added CHANGELOG.md
