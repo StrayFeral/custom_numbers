@@ -205,6 +205,7 @@ numN1 / numN2   # NOTE: This will perform floor division as well!
 numN1 * numN2   # Multiplication
 numN1 ** numN2  # Power
 numN1 % numN2   # Modulo division
+abs(numN)       # Absolute value
 ```
 
 Using the iterator:
