@@ -1,3 +1,9 @@
+### v1.3.0
+
+- Fixed a bug in GearIterator
+- Implemented end_value for GearIterator so now it will behave as 
+    range()
+
 ### v1.2.0
 
 - Fixed Issue #2: .absolute() modifies the original value
