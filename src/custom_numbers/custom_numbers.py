@@ -486,13 +486,14 @@ class GearIterator:
         if not self._start_value_returned:
             self._start_value_returned = True
             return repr(self)
+        
+        if len(self._end_value) > 0 and repr(self) == self._end_value:
+            raise StopIteration
 
         spin_wheels: bool = True
         i = 0
         while spin_wheels:
             self._gears[i].pop(0)
-            if len(self._end_value) > 0 and repr(self) == self._end_value:
-                raise StopIteration
 
             # Reset gear
             if len(self._gears[i]) == 0:
@@ -509,6 +510,9 @@ class GearIterator:
                     raise StopIteration
             else:  # Wheel not yet reached the final set value
                 spin_wheels = False
+            
+            if len(self._end_value) > 0 and repr(self) == self._end_value:
+                raise StopIteration
 
         return repr(self)
 

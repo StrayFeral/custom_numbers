@@ -101,7 +101,7 @@ class TestGearIterator:
         result = it.combinations
         assert result == expected
 
-    def test_bug01(self):
+    def test_bug03(self):
         """2024-03-28 Most basic test."""
 
         sys10 = cn.CustomNumeralSystem("0123456789")
@@ -116,6 +116,15 @@ class TestGearIterator:
         it = cn.GearIterator(sys10, 0, 0, "", "3")
         result = list(it)
         expected = ["0", "1", "2"]
+        assert result == expected
+    
+    def test_same_start_value_and_end_value(self):
+        """2024-03-28 New functionality: Added end_value"""
+
+        sys10 = cn.CustomNumeralSystem("0123456789")
+        it = cn.GearIterator(sys10, 0, 0, "3", "3")
+        result = list(it)
+        expected = ["3"]
         assert result == expected
 
     @classmethod
