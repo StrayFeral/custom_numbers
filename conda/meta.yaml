@@ -1,7 +1,7 @@
 {% set name = 'custom-numbers' %}
 {% set filename = 'custom_numbers' %}
 {% set char1 = str(ord(name[0])) %}
-{% set version = '1.2.0' %}
+{% set version = '1.3.0' %}
 
 package:
     name: {{ name|lower }}
