@@ -8,13 +8,12 @@ Project homepage and documentation:
 https://github.com/StrayFeral/custom_numbers
 """
 
-import re
 import math
+import re
 from typing import List
 
 __version__: str = "1.2.0"
 __author__: str = r"Evgueni Antonov (Evgueni.Antonov@gmail.com)"
-
 
 
 class CustomNumeralSystem:
@@ -70,7 +69,6 @@ class CustomNumeralSystem:
 
     _FORBIDDENCHARACTERS: str = r"+-*/%\s"
 
-    
     def __init__(self, digits: str) -> None:
         self._digits: str = digits
         self._base: int = len(digits)
@@ -86,31 +84,25 @@ class CustomNumeralSystem:
         # if self._base > self._MAXBASE:
         #    raise ValueError(f"Unsupported numeral base given {self._base}. Maximum base supported is {self._MAXBASE}.")
 
-    
     def __repr__(self) -> str:
         return self._digits
 
-    
     def __eq__(self, other) -> bool:
         """This compare both the digits and the Base."""
         return self._digits == str(other)
 
-    
     def __ne__(self, other) -> bool:
         """This compare both the digits and the Base."""
         return self._digits != str(other)
 
-    
     @property
     def forbidden_characters(self) -> str:
         return self._FORBIDDENCHARACTERS
 
-    
     @property
     def base(self) -> int:
         return self._base
 
-    
     def valid_number(self, number: str) -> bool:
         r"""Validation: Is this digit belonging to this numeral system?"""
 
@@ -135,7 +127,6 @@ class CustomNumeralSystem:
         return True
 
 
-
 class CustomNumber:
     r"""Definition of a number from the CustomNumericalSystem.
 
@@ -157,140 +148,136 @@ class CustomNumber:
     _POSITIVE: str = r"+"
     _NEGATIVE: str = r"-"
 
-    
     def __init__(self, numeral_system: CustomNumeralSystem, number: str) -> None:
         self._numeral_system: CustomNumeralSystem = numeral_system
         self._init_value: str = number  # Just in case we will keep the original value
-        self._value: str = self.__abs__(number)
+        self._value: str = number
         self._sign: str = self._POSITIVE
-        
+        self._value: str = self.__abs__(number)
+
         if number[0] == self._NEGATIVE:
             self._sign = self._NEGATIVE
-        
-        if not numeral_system.valid_number(self._value):
-            raise ValueError("Invalid characters in number, which are not in the chosen numeral system.")
 
-    
+        if not numeral_system.valid_number(self._value):
+            raise ValueError(
+                "Invalid characters in number, which are not in the chosen numeral system."
+            )
+
     def __repr__(self) -> str:
         if self._sign == self._NEGATIVE:
             return f"-{self._value}"
         return self._value
 
-    
     @property
     def numeral_system(self) -> CustomNumeralSystem:
         return self._numeral_system
 
-    
     @property
     def init_value(self) -> str:
         r"""Return the value the class was initialized with, as it was originally passed to the class."""
         return self._init_value
 
-    
     def __eq__(self, other) -> bool:
         if self.numeral_system != other.numeral_system:
             raise ValueError("Numbers must be from the same numeral system.")
         return self.to_decimal() == other.to_decimal()
 
-    
     def __ne__(self, other) -> bool:
         if self.numeral_system != other.numeral_system:
             raise ValueError("Numbers must be from the same numeral system.")
         return self.to_decimal() != other.to_decimal()
 
-    
     def __ge__(self, other) -> bool:
         if self.numeral_system != other.numeral_system:
             raise ValueError("Numbers must be from the same numeral system.")
         return self.to_decimal() >= other.to_decimal()
 
-    
     def __gt__(self, other) -> bool:
         if self.numeral_system != other.numeral_system:
             raise ValueError("Numbers must be from the same numeral system.")
         return self.to_decimal() > other.to_decimal()
 
-    
     def __lt__(self, other) -> bool:
         if self.numeral_system != other.numeral_system:
             raise ValueError("Numbers must be from the same numeral system.")
         return self.to_decimal() < other.to_decimal()
 
-    
     def __le__(self, other) -> bool:
         if self.numeral_system != other.numeral_system:
             raise ValueError("Numbers must be from the same numeral system.")
         return self.to_decimal() <= other.to_decimal()
 
-    
     def __add__(self, other) -> object:
         if self.numeral_system != other.numeral_system:
             raise ValueError("Numbers must be from the same numeral system.")
         result: int = self.to_decimal() + other.to_decimal()
-        num: CustomNumber = CustomNumber(self.numeral_system, str(self.numeral_system)[0])  # Dummy init_value
+        num: CustomNumber = CustomNumber(
+            self.numeral_system, str(self.numeral_system)[0]
+        )  # Dummy init_value
         num.from_decimal(result)
         return num
 
-    
     def __sub__(self, other) -> object:
         if self.numeral_system != other.numeral_system:
             raise ValueError("Numbers must be from the same numeral system.")
         result: int = self.to_decimal() - other.to_decimal()
-        num: CustomNumber = CustomNumber(self.numeral_system, str(self.numeral_system)[0])  # Dummy init_value
+        num: CustomNumber = CustomNumber(
+            self.numeral_system, str(self.numeral_system)[0]
+        )  # Dummy init_value
         num.from_decimal(result)
         return num
 
-    
     def __mul__(self, other) -> object:
         if self.numeral_system != other.numeral_system:
             raise ValueError("Numbers must be from the same numeral system.")
         result: int = self.to_decimal() * other.to_decimal()
-        num: CustomNumber = CustomNumber(self.numeral_system, str(self.numeral_system)[0])  # Dummy init_value
+        num: CustomNumber = CustomNumber(
+            self.numeral_system, str(self.numeral_system)[0]
+        )  # Dummy init_value
         num.from_decimal(result)
         return num
 
-    
     def __floordiv__(self, other) -> object:
         if self.numeral_system != other.numeral_system:
             raise ValueError("Numbers must be from the same numeral system.")
         result: int = self.to_decimal() // other.to_decimal()
-        num: CustomNumber = CustomNumber(self.numeral_system, str(self.numeral_system)[0])  # Dummy init_value
+        num: CustomNumber = CustomNumber(
+            self.numeral_system, str(self.numeral_system)[0]
+        )  # Dummy init_value
         num.from_decimal(result)
         return num
 
-    
     def __truediv__(self, other) -> object:
         return self.__floordiv__(other)
 
-    
     def __div__(self, other) -> object:
         return self.__floordiv__(other)
 
-    
     def __pow__(self, other) -> object:
         if self.numeral_system != other.numeral_system:
             raise ValueError("Numbers must be from the same numeral system.")
         result: int = self.to_decimal() ** other.to_decimal()
-        num: CustomNumber = CustomNumber(self.numeral_system, str(self.numeral_system)[0])  # Dummy init_value
+        num: CustomNumber = CustomNumber(
+            self.numeral_system, str(self.numeral_system)[0]
+        )  # Dummy init_value
         num.from_decimal(result)
         return num
 
-    
     def __mod__(self, other) -> object:
         if self.numeral_system != other.numeral_system:
             raise ValueError("Numbers must be from the same numeral system.")
         result: int = self.to_decimal() % other.to_decimal()
-        num: CustomNumber = CustomNumber(self.numeral_system, str(self.numeral_system)[0])  # Dummy init_value
+        num: CustomNumber = CustomNumber(
+            self.numeral_system, str(self.numeral_system)[0]
+        )  # Dummy init_value
         num.from_decimal(result)
         return num
 
-    
     def __abs__(self, number: str = "") -> str:
         """Returns the absolute value."""
 
         num: str = number
-        
+
         if len(number) == 0:
             num = self._value
 
@@ -299,7 +286,6 @@ class CustomNumber:
 
         return num
 
-    
     def digit_to_int(self, digit: str) -> int:
         r"""Fastest and simplest possible conversion. Left-most one is the zero."""
 
@@ -307,11 +293,9 @@ class CustomNumber:
             raise ValueError("Invalid digit. Must be one character.")
         return str(self._numeral_system).index(digit)
 
-    
     def int_to_digit(self, i: int) -> str:
         return str(self.numeral_system)[i]
 
-    
     def to_decimal(self) -> int:
         r"""Converts a number of a custom numeral system to a decimal integer."""
 
@@ -327,7 +311,6 @@ class CustomNumber:
 
         return int_value
 
-    
     def from_decimal(self, number: int) -> None:
         r"""Converts the number to the current numeral system and sets the internal value to it."""
 
@@ -350,7 +333,6 @@ class CustomNumber:
         self._value = value
 
 
-
 class GearIterator:
     r"""GearIterator.
 
@@ -363,42 +345,79 @@ class GearIterator:
         numeral_system: Custom numeral system. Mind the order of symbols!
         min_length: Minimum length, default is zero
         max_length: Maximum length, default is zero - means no limit
-        init_value: Value to initialize with
+        start_value: Value to start iterating from
+        end_value: Value to end the iteration, non-inclusive.
+            This will ignore the max_length if set
 
     Returns:
         str
     """
 
-    
-    def __init__(self, numeral_system: CustomNumeralSystem, min_length: int = 0, max_length: int = 0, init_value: str = "") -> None:
+    # Nobody would need that much, but still
+    _ABSOLUTE_MAX_LEN = 999999999999999999999999999999  # Funny eh?
+
+    def __init__(
+        self,
+        numeral_system: CustomNumeralSystem,
+        min_length: int = 0,
+        max_length: int = _ABSOLUTE_MAX_LEN,
+        start_value: str = "",
+        end_value: str = "",
+    ) -> None:
+        if max_length == 0:
+            max_length = self._ABSOLUTE_MAX_LEN
+
+        if end_value is None:
+            end_value = ""
+        if len(end_value) > 0:
+            max_length = self._ABSOLUTE_MAX_LEN
+
         self._numeral_system: CustomNumeralSystem = numeral_system
         self._symbol_list: List[str] = [x for x in str(numeral_system)]
         self._min_length: int = min_length
         self._max_length: int = max_length
-        self._init_value: str = init_value
-        self._init_value_returned: bool = False
+        self._start_value: str = start_value
+        self._start_value_returned: bool = False
         self._index: int = 0
         self._combinations: int = 0
+        self._end_value: str = end_value
 
         # Basic validation ...
+        if max_length > self._ABSOLUTE_MAX_LEN:
+            raise ValueError(
+                f"max_length is greather than the absolute max length of {self._ABSOLUTE_MAX_LEN}."
+            )
+
         if max_length > 0 and min_length > max_length:
             raise ValueError("min_length is greather than max_length.")
 
-        if len(init_value) > 0:
-            if len(init_value) < min_length or (max_length > 0 and len(init_value) > max_length):
-                raise ValueError("Incorrect init_value length.")
+        if len(start_value) > 0:
+            if len(start_value) < min_length or (
+                max_length > 0 and len(start_value) > max_length
+            ):
+                raise ValueError("Incorrect start_value length.")
 
-            if not numeral_system.valid_number(init_value):
-                raise ValueError("Invalid characters in init_value, which are not in the chosen numeral system.")
+            if not numeral_system.valid_number(start_value):
+                raise ValueError(
+                    "Invalid characters in start_value, which are not in the chosen numeral system."
+                )
 
-            if init_value == str(numeral_system)[0] * len(init_value):
-                raise ValueError("Init_value contains only smallest digits (zero-equivalents).")
+            if start_value == str(numeral_system)[0] * len(start_value):
+                raise ValueError(
+                    "start_value contains only smallest digits (zero-equivalents)."
+                )
 
             # Strip the leading "zeroes"
-            while init_value[0] == str(numeral_system)[0]:
-                init_value = init_value[1:]
+            while start_value[0] == str(numeral_system)[0]:
+                start_value = start_value[1:]
 
-            self._init_value = init_value[::-1]  # Reverse the string
+            self._start_value = start_value[::-1]  # Reverse the string
+
+            if len(end_value) > 0:
+                start_val: CustomNumber = CustomNumber(numeral_system, start_value)
+                end_val: CustomNumber = CustomNumber(numeral_system, end_value)
+                if start_val > end_val:
+                    raise ValueError("start_value is greather than the end_value.")
 
         min_len: int = min_length
         if min_len == 0:
@@ -406,8 +425,8 @@ class GearIterator:
 
         self._gears: List[list] = []
 
-        # Initialization with init_value
-        for symbol in self._init_value:
+        # Initialization with start_value
+        for symbol in self._start_value:
             seq = self._symbol_list.copy()
 
             while seq[0] != symbol:
@@ -419,14 +438,13 @@ class GearIterator:
         for i in range(len(self._gears), min_len):
             seq = self._symbol_list.copy()
 
-            if len(self._init_value) > 0 and i < len(self._init_value):
-                symbol = self._init_value[i]
+            if len(self._start_value) > 0 and i < len(self._start_value):
+                symbol = self._start_value[i]
                 while seq[0] != symbol:
                     seq.pop(0)
 
             self._gears.append(seq)
 
-    
     @property
     def combinations(self) -> int:
         """Combinations calculation.
@@ -440,6 +458,9 @@ class GearIterator:
         # 11
         And while for mathematicians "01" == "10", for me they are not
         the same.
+
+        This would give furious results with the default value, so
+        better set max_length if you want cool results here.
         """
 
         if self._combinations == 0:
@@ -451,28 +472,27 @@ class GearIterator:
 
         return self._combinations
 
-    
     def __repr__(self) -> str:
         result: str = ""
         for gear in self._gears:
             result += gear[0]
         return result[::-1]  # Reverse the string
 
-    
     def __iter__(self) -> object:
         return self
 
-    
     # l = list(generator) # internally call next() until exhaustion
     def __next__(self) -> str:
-        if not self._init_value_returned:
-            self._init_value_returned = True
+        if not self._start_value_returned:
+            self._start_value_returned = True
             return repr(self)
 
         spin_wheels: bool = True
         i = 0
         while spin_wheels:
             self._gears[i].pop(0)
+            if len(self._end_value) > 0 and repr(self) == self._end_value:
+                raise StopIteration
 
             # Reset gear
             if len(self._gears[i]) == 0:
@@ -492,7 +512,6 @@ class GearIterator:
 
         return repr(self)
 
-    
     def __enter__(self) -> object:
         r"""Context management protocol.
 
@@ -500,7 +519,6 @@ class GearIterator:
         """
         return self
 
-    
     def __exit__(self, exc_type: object, exc_value: object, exc_tb: object) -> bool:
         r"""Context management protocol.
 

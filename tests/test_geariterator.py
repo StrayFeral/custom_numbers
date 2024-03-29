@@ -1,8 +1,8 @@
-import pytest
 import pickle
 import sys
-from custom_numbers import custom_numbers as cn
 
+import pytest
+from custom_numbers import custom_numbers as cn
 
 # Common parameter
 sys3 = cn.CustomNumeralSystem("pba")
@@ -10,11 +10,11 @@ sys3 = cn.CustomNumeralSystem("pba")
 # Scenario 0) Invalid parameters exception test
 # params0_1 = [cn.CustomNumeralSystem(""), 0, 2]              # Empty set
 params0_2 = [sys3, 3, 2]  # min_length > max_length
-params0_3 = [sys3, 5, 10, "ppp"]  # len(init_value) < min_length
-params0_4 = [sys3, 5, 10, "ppppppppppppppp"]  # len(init_value) > max_length
-params0_5 = [sys3, 3, 10, "pbz"]  # Invalid symbol in init_value
+params0_3 = [sys3, 5, 10, "ppp"]  # len(start_value) < min_length
+params0_4 = [sys3, 5, 10, "ppppppppppppppp"]  # len(start_value) > max_length
+params0_5 = [sys3, 3, 10, "pbz"]  # Invalid symbol in start_value
 
-# Scenario 1) no init_value, max_length=2, full test
+# Scenario 1) no start_value, max_length=2, full test
 params1 = [sys3, 0, 2, ""]
 expected1 = [
     ("p"),
@@ -28,7 +28,7 @@ expected1 = [
     ("aa"),
 ]
 
-# Scenario 2) init_value="pa", min_value=2, max_length=3, partial test
+# Scenario 2) start_value="pa", min_value=2, max_length=3, partial test
 params2 = [sys3, 2, 3, "ap"]
 expected2 = [
     ("ap"),
@@ -39,55 +39,45 @@ expected2 = [
 ]
 
 
-
 class TestGearIterator:
     r"""GearIterator test class."""
 
-    
     @classmethod
     def setup_class(cls):
         cls.scenario1 = cn.GearIterator(*params1)
         cls.scenario2 = cn.GearIterator(*params2)
 
-    
     def test_scenario0_2(self):
         with pytest.raises(Exception):
             i = cn.GearIterator(*params0_2)
 
-    
     def test_scenario0_3(self):
         with pytest.raises(Exception):
             i = cn.GearIterator(*params0_3)
 
-    
     def test_scenario0_4(self):
         with pytest.raises(Exception):
             i = cn.GearIterator(*params0_4)
 
-    
     def test_scenario0_5(self):
         with pytest.raises(Exception):
             i = cn.GearIterator(*params0_5)
 
-    
     @pytest.mark.parametrize("expected", expected1)
     def test_scenario1(self, expected):
         result = self.scenario1
         assert next(result) == expected
 
-    
     def test_scenario1_expected_exception(self):
         result = self.scenario1
         with pytest.raises(StopIteration):
             assert next(result)
 
-    
     @pytest.mark.parametrize("expected", expected2)
     def test_scenario2(self, expected):
         result = self.scenario2
         assert next(result) == expected
 
-    
     def test_scenario3(self):
         """Testing serialization"""
 
@@ -104,7 +94,6 @@ class TestGearIterator:
         our_iterator = pickle.loads(serialized)
         assert next(our_iterator) == "bbp"
 
-    
     def test_combinations_calculation(self):
         expected = 4
         sysN = cn.CustomNumeralSystem("01")
@@ -112,9 +101,24 @@ class TestGearIterator:
         result = it.combinations
         assert result == expected
 
-    
+    def test_bug01(self):
+        """2024-03-28 Most basic test."""
+
+        sys10 = cn.CustomNumeralSystem("0123456789")
+        it = cn.GearIterator(sys10)
+        for i in range(15):
+            assert str(i) == next(it)
+
+    def test_end_value(self):
+        """2024-03-28 New functionality: Added end_value"""
+
+        sys10 = cn.CustomNumeralSystem("0123456789")
+        it = cn.GearIterator(sys10, 0, 0, "", "3")
+        result = list(it)
+        expected = ["0", "1", "2"]
+        assert result == expected
+
     @classmethod
     def teardown_class(cls):
         del cls.scenario1
         del cls.scenario2
-
